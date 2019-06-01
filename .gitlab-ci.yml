@@ -3,7 +3,7 @@ before_script:
   - apt-get update -qq && apt-get install -y -qq libpq-dev cmake
   - ruby -v
   - which ruby
-  - gem install bundler -v 1.17.1 --no-ri --no-rdoc
+  - gem install bundler -v 2.0.1
   - bundle install --without staging production
 stages:
   - build
