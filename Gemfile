@@ -10,6 +10,7 @@ gem 'faraday'
 gem 'telegram-bot-ruby'
 
 group :development, :test do
+  gem 'cucumber'
   gem 'rspec'
   gem 'rspec-core'
   gem 'rubocop', require: false
