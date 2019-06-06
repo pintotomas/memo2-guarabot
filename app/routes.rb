@@ -9,7 +9,7 @@ Para listar los comandos disponibles por favor envia /help")
   end
 
   on_message '/oferta' do |bot, message|
-    response = Faraday.get 'http://localhost:3000/students/academic_offer'
+    response = Faraday.get ENV['URL_API'] + 'students/academic_offer'
     response_json = JSON.parse(response.body)
     if response_json.empty?
       bot.api.send_message(chat_id: message.chat.id, text: 'No hay oferta academica')
