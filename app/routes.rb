@@ -1,5 +1,4 @@
 require File.dirname(__FILE__) + '/../lib/routing'
-require 'byebug'
 class Routes
   include Routing
 
@@ -9,8 +8,13 @@ Para listar los comandos disponibles por favor envia /help")
   end
 
   on_message '/oferta' do |bot, message|
-    response = Faraday.get 'http://localhost:3000/students/academic_offer'
-    bot.api.send_message(chat_id: message.chat.id, text: response.body)
+    response = Faraday.get ENV['URL_API'] + 'students/academic_offer'
+    response_json = JSON.parse(response.body)
+    if response_json.empty?
+      bot.api.send_message(chat_id: message.chat.id, text: 'No hay oferta academica')
+    else
+      bot.api.send_message(chat_id: message.chat.id, text: response.body)
+    end
   end
 
   default do |bot, message|
