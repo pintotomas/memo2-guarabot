@@ -7,8 +7,17 @@ before_script:
   - bundle install --without staging production
 stages:
   - build
+  - deploy_staging
 
 job_build:
   stage: build
   script:
     - RACK_ENV=test bundle exec rake
+
+job_deploy_staging:
+  stage: deploy_staging
+  script:
+  - gem install dpl
+  - dpl --provider=heroku --app=invernaliaguarabot --api-key=f8946308-e507-41d1-82b6-8ecdb1fed1c6
+  only:
+  - staging
