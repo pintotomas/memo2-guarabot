@@ -7,6 +7,10 @@ class Routes
 Para listar los comandos disponibles por favor envia /help")
   end
 
+  on_message '/help' do |bot, message|
+    bot.api.send_message(chat_id: message.chat.id, text: '/oferta Muestra la oferta academica')
+  end
+
   on_message '/oferta' do |bot, message|
     response = Faraday.get ENV['URL_API'] + 'materias'
     response_json = JSON.parse(response.body)
