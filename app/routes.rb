@@ -15,8 +15,8 @@ Para listar los comandos disponibles por favor envia /help")
       bot.api.send_message(chat_id: message.chat.id, text: 'No hay oferta academica')
     else
       text = ''
-      response_json["oferta"].each do |subject_info|
-        text = text + 'Materia: '+subject_info['materia']+ ', Codigo:' +String(subject_info['codigo']) + ', Docente:'+subject_info['docente']+ '
+      response_json['oferta'].each do |subject_info|
+        text = text + 'Materia: ' + subject_info['materia'] + ', Codigo:' + String(subject_info['codigo']) + ', Docente:' + subject_info['docente'] + '
 
 '
       end
