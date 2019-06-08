@@ -10,6 +10,7 @@ Para listar los comandos disponibles por favor envia /help")
 
   on_message '/help' do |bot, message|
     bot.api.send_message(chat_id: message.chat.id, text: '/oferta Muestra la oferta academica')
+    bot.api.send_message(chat_id: message.chat.id, text: '/inscripcion Muestra las materias disponibles para poder inscribirse')
   end
 
   on_message '/oferta' do |bot, message|
