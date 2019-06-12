@@ -19,6 +19,7 @@ Para listar los comandos disponibles por favor envia /help")
     bot.api.send_message(chat_id: message.chat.id, text: '/oferta Muestra la oferta academica')
     bot.api.send_message(chat_id: message.chat.id, text: '/inscripcion Permite inscribirte a materias de la oferta academica')
     bot.api.send_message(chat_id: message.chat.id, text: '/estado Permite consultar tu estado en una meteria')
+    bot.api.send_message(chat_id: message.chat.id, text: '/nota Permite consultar tu estado en una meteria')
   end
 
   on_message '/oferta' do |bot, message|
@@ -92,7 +93,7 @@ Para listar los comandos disponibles por favor envia /help")
   end
 
   default do |bot, message|
-    bot.api.send_message(chat_id: message.message.chat.id, text: 'Uh? No te entiendo! Podes ver los comandos disponibles con /help')
+    bot.api.send_message(chat_id: message.chat.id, text: 'Uh? No te entiendo! Podes ver los comandos disponibles con /help')
   end
 
   def self.show_academic_offer_like_options(conn)
