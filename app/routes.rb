@@ -1,4 +1,5 @@
 require File.dirname(__FILE__) + '/../lib/routing'
+require 'byebug'
 
 class Routes
   include Routing
@@ -40,11 +41,30 @@ Para listar los comandos disponibles por favor envia /help")
     bot.api.send_message(chat_id: message.chat.id, text: 'Seleccione la materia para la inscripcion', reply_markup: markup)
   end
 
+  on_message '/estado' do |bot, message|
+    byebug
+    response = Faraday.get ENV['URL_API'] + 'miEstado'
+    subjects = JSON.parse(response.body)
+    button_subjects = []
+    subjects['oferta'].each do |subject|
+      button_subjects.push(Telegram::Bot::Types::InlineKeyboardButton.new(text: subject['materia'], callback_data: subject['codigo']))
+    end
+    markup = Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: button_subjects)
+    bot.api.send_message(chat_id: message.chat.id, text: 'Seleccione la materia para consultar tu estado', reply_markup: markup)
+  end
+
   on_response_to 'Seleccione la materia para la inscripcion' do |bot, message|
     code_message = message.data
     full_name = message.from.first_name + ' ' + message.from.last_name
     params = { nombre_completo: full_name, codigo_materia: code_message.to_s, username_alumno: message.from.username }
     response = Faraday.post(ENV['URL_API'] + 'alumnos', params.to_json)
+    bot.api.send_message(chat_id: message.message.chat.id, text: response.body)
+  end
+
+  on_response_to 'Seleccione la materia para consultar tu estado' do |bot, message|
+    code_message = message.data
+    params = { codigo_materia: code_message.to_s, username_alumno: message.from.username }
+    response = Faraday.post(ENV['URL_API'] + 'miEstado', params.to_json)
     bot.api.send_message(chat_id: message.message.chat.id, text: response.body)
   end
 
