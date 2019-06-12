@@ -11,7 +11,7 @@ class Routes
 
   on_message '/start' do |bot, message|
     bot.api.send_message(chat_id: message.chat.id, text: "Hola, #{message.from.first_name}
-    Para listar los comandos disponibles por favor envia /help")
+Para listar los comandos disponibles por favor envia /help")
   end
 
   on_message '/help' do |bot, message|
