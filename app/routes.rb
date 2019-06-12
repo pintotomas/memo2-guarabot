@@ -1,5 +1,4 @@
 require File.dirname(__FILE__) + '/../lib/routing'
-require 'byebug'
 
 class Routes
   include Routing
@@ -12,13 +11,13 @@ class Routes
 
   on_message '/start' do |bot, message|
     bot.api.send_message(chat_id: message.chat.id, text: "Hola, #{message.from.first_name}
-Para listar los comandos disponibles por favor envia /help")
+    Para listar los comandos disponibles por favor envia /help")
   end
 
   on_message '/help' do |bot, message|
-    bot.api.send_message(chat_id: message.chat.id, text: '/oferta Muestra la oferta academica
-
-/inscripcion Permite inscribirte a materias de la oferta academica')
+    bot.api.send_message(chat_id: message.chat.id, text: '/oferta Muestra la oferta academica')
+    bot.api.send_message(chat_id: message.chat.id, text: '/inscripcion Permite inscribirte a materias de la oferta academica')
+    bot.api.send_message(chat_id: message.chat.id, text: '/estado Permite consultar tu estado en una meteria')
   end
 
   on_message '/oferta' do |bot, message|
@@ -68,13 +67,14 @@ Para listar los comandos disponibles por favor envia /help")
 
   on_response_to 'Seleccione la materia consultar estado' do |bot, message|
     code_message = message.data
-    params = { codigo_materia: code_message.to_s, username_alumno: message.from.username }
+    params = { codigoMateria: code_message.to_s, usernameAlumno: message.from.username }
     response = conn.get do |req| # (ENV['URL_API'] + 'alumnos', params.to_json)
-      req.url ENV['URL_API'] + 'miEstado'
+      req.url ENV['URL_API'] + 'materias/estado'
       req.headers['API_TOKEN'] = ENV['HTTP_API_TOKEN']
-      req.body = params.to_json
+      req.params = params
     end
-    bot.api.send_message(chat_id: message.message.chat.id, text: response.body)
+    request_body = JSON.parse(response.body.gsub('\"', '"'))
+    bot.api.send_message(chat_id: message.message.chat.id, text: request_body['estado'])
   end
 
   on_response_to 'Seleccione la materia para la inscripcion' do |bot, message|
