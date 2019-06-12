@@ -67,11 +67,11 @@ Para listar los comandos disponibles por favor envia /help")
 
   on_response_to 'Seleccione la materia consultar estado' do |bot, message|
     code_message = message.data
-    params = { codigo_materia: code_message.to_s, username_alumno: message.from.username }
+    params = { codigoMateria: code_message.to_s, usernameAlumno: message.from.username }
     response = conn.get do |req| # (ENV['URL_API'] + 'alumnos', params.to_json)
-      req.url ENV['URL_API'] + 'miEstado'
+      req.url ENV['URL_API'] + 'materias/estado'
       req.headers['API_TOKEN'] = ENV['HTTP_API_TOKEN']
-      req.body = params.to_json
+      req.params = params
     end
     bot.api.send_message(chat_id: message.message.chat.id, text: response.body)
   end
