@@ -1,5 +1,4 @@
 require File.dirname(__FILE__) + '/../lib/routing'
-require 'byebug'
 
 class Routes
   include Routing
@@ -18,8 +17,8 @@ Para listar los comandos disponibles por favor envia /help")
   on_message '/help' do |bot, message|
     bot.api.send_message(chat_id: message.chat.id, text: '/oferta Muestra la oferta academica')
     bot.api.send_message(chat_id: message.chat.id, text: '/inscripcion Permite inscribirte a materias de la oferta academica')
-    bot.api.send_message(chat_id: message.chat.id, text: '/estado Permite consultar tu estado en una meteria')
-    bot.api.send_message(chat_id: message.chat.id, text: '/nota Permite consultar tu estado en una meteria')
+    bot.api.send_message(chat_id: message.chat.id, text: '/estado Permite consultar tu estado en una materia')
+    bot.api.send_message(chat_id: message.chat.id, text: '/nota Permite consultar tu nota en una materia')
   end
 
   on_message '/oferta' do |bot, message|
