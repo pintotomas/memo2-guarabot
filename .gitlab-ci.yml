@@ -8,6 +8,7 @@ before_script:
 stages:
   - build
   - deploy_staging
+  - deploy_production
 
 job_build:
   stage: build
@@ -21,3 +22,11 @@ job_deploy_staging:
   - dpl --provider=heroku --app=invernalia-guarabot --api-key=59b0a896-4f1f-4237-9a58-14c5d164db0f
   only:
   - staging
+
+job_deploy_production:
+  stage: deploy_production
+  script:
+  - gem install dpl
+  - dpl --provider=heroku --app=invernalia-guarabot-produccion --api-key=a729e9a7-0018-43c2-87eb-a2e7e3321ab7
+  only:
+  - master
