@@ -1,5 +1,4 @@
 require File.dirname(__FILE__) + '/../lib/routing'
-require 'byebug'
 
 class Routes
   include Routing
