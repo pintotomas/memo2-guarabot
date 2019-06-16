@@ -51,9 +51,9 @@ class RoutesInscription < Routes
 
   on_message '/misInscripciones' do |bot, message|
     params = { usernameAlumno: message.from.username }
-    response = Routes.send_get(params, 'misinscripciones')
+    response = Routes.send_get(params, 'inscripciones')
     response_json = JSON.parse(response.body)
-    if response_json['oferta'] == []
+    if response_json['inscripciones'] == []
       bot.api.send_message(chat_id: message.chat.id, text: 'No tenes inscripciones')
     else
       Routes.show_subjects_like_info(bot, message, response_json)
