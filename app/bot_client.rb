@@ -1,5 +1,6 @@
 require 'telegram/bot'
 require File.dirname(__FILE__) + '/../app/routes'
+require File.dirname(__FILE__) + '/../app/routes_inscription'
 
 class BotClient
   def initialize(token = ENV['TELEGRAM_TOKEN'])
@@ -29,6 +30,6 @@ class BotClient
   def handle_message(message, bot)
     @logger.debug "@#{message.from.username}: #{message.inspect}"
 
-    Routes.new.handle(bot, message)
+    RoutesInscription.new.handle(bot, message)
   end
 end
