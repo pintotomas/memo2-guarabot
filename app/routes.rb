@@ -14,6 +14,7 @@ Para listar los comandos disponibles por favor envia /help")
     bot.api.send_message(chat_id: message.chat.id, text: '/inscripcion Permite inscribirte a materias de la oferta academica')
     bot.api.send_message(chat_id: message.chat.id, text: '/estado Permite consultar tu estado en una materia')
     bot.api.send_message(chat_id: message.chat.id, text: '/nota Permite consultar tu nota en una materia')
+    bot.api.send_message(chat_id: message.chat.id, text: '/misInscripciones Muestra tus inscripciones')
   end
 
   default do |bot, message|
