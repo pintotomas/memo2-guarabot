@@ -1,5 +1,4 @@
 class RoutesInscription < Routes
-
   on_message '/oferta' do |bot, message|
     params = { usernameAlumno: message.from.username }
     response = Routes.send_get(params, 'materias')
