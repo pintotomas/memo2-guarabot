@@ -62,8 +62,8 @@ Para listar los comandos disponibles por favor envia /help")
     one_connection
   end
 
-  def self.show_subjects_like_info(bot, message, response_json)
-    response_json['oferta'].each do |subject_info|
+  def self.show_subjects_like_info(bot, message, response_json, property)
+    response_json[property].each do |subject_info|
       text = ''
       text = text + 'Materia: ' + subject_info['materia'] + ', Codigo:' + String(subject_info['codigo']) + ', Docente:' + subject_info['docente']
       bot.api.send_message(chat_id: message.chat.id, text: text)
