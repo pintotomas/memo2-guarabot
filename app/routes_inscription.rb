@@ -1,11 +1,12 @@
 class RoutesInscription < Routes
   on_message '/oferta' do |bot, message|
-    response = Routes.send_get(nil, 'materias')
+    params = { usernameAlumno: message.from.username }
+    response = Routes.send_get(params, 'materias')
     response_json = JSON.parse(response.body)
     if response_json['oferta'] == []
       bot.api.send_message(chat_id: message.chat.id, text: 'No hay oferta academica')
     else
-      Routes.show_subjects_like_info(bot, message, response_json)
+      Routes.show_subjects_like_info(bot, message, response_json, 'oferta')
     end
   end
 
@@ -56,7 +57,7 @@ class RoutesInscription < Routes
     if response_json['inscripciones'] == []
       bot.api.send_message(chat_id: message.chat.id, text: 'No tenes inscripciones')
     else
-      Routes.show_subjects_like_info(bot, message, response_json)
+      Routes.show_subjects_like_info(bot, message, response_json, 'inscripciones')
     end
   end
 end
