@@ -40,7 +40,7 @@ class RoutesInscription < Routes
     response = Routes.send_post(params, 'alumnos')
     request_body = JSON.parse(response.body.gsub('\"', '"'))
     if request_body['error'].nil?
-      bot.api.send_message(chat_id: message.message.chat.id, text: request_body['inscripcion'])
+      bot.api.send_message(chat_id: message.message.chat.id, text: request_body['resultado'])
     else
       bot.api.send_message(chat_id: message.message.chat.id, text: request_body['error'])
     end
