@@ -38,7 +38,12 @@ class RoutesInscription < Routes
     full_name = message.from.first_name + ' ' + message.from.last_name
     params = { nombre_completo: full_name, codigo_materia: code_message.to_s, username_alumno: message.from.username }
     response = Routes.send_post(params, 'alumnos')
-    bot.api.send_message(chat_id: message.message.chat.id, text: response.body)
+    request_body = JSON.parse(response.body.gsub('\"', '"'))
+    if request_body['error'].nil?
+      bot.api.send_message(chat_id: message.message.chat.id, text: request_body['inscripcion'])
+    else
+      bot.api.send_message(chat_id: message.message.chat.id, text: request_body['error'])
+    end
   end
 
   on_response_to 'Seleccione la materia para consultar tu nota' do |bot, message|
