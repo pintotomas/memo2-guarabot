@@ -5,24 +5,47 @@ class RoutesInscription < Routes
     response_json = JSON.parse(response.body)
     if response_json['oferta'] == []
       bot.api.send_message(chat_id: message.chat.id, text: 'No hay oferta academica')
+    elsif !response_json['error'].nil?
+      bot.api.send_message(chat_id: message.chat.id, text: response_json['error'])
     else
       Routes.show_subjects_like_info(bot, message, response_json, 'oferta')
     end
   end
 
   on_message '/inscripcion' do |bot, message|
-    markup = Routes.show_academic_offer_like_options(Routes.send_get(nil, 'materias'))
-    bot.api.send_message(chat_id: message.chat.id, text: 'Seleccione la materia para la inscripcion', reply_markup: markup)
+    params = { usernameAlumno: message.from.username }
+    response = Routes.send_get(params, 'materias')
+    request_body = JSON.parse(response.body.gsub('\"', '"'))
+    if !request_body['error'].nil?
+      bot.api.send_message(chat_id: message.chat.id, text: request_body['error'])
+    else
+      markup = Routes.show_academic_offer_like_options(response)
+      bot.api.send_message(chat_id: message.chat.id, text: 'Seleccione la materia para la inscripcion', reply_markup: markup)
+    end
   end
 
   on_message '/estado' do |bot, message|
-    markup = Routes.show_academic_offer_like_options(Routes.send_get(nil, 'materias'))
-    bot.api.send_message(chat_id: message.chat.id, text: 'Seleccione la materia para consultar tu estado', reply_markup: markup)
+    params = { usernameAlumno: message.from.username }
+    response = Routes.send_get(params, 'materias')
+    request_body = JSON.parse(response.body.gsub('\"', '"'))
+    if !request_body['error'].nil?
+      bot.api.send_message(chat_id: message.chat.id, text: request_body['error'])
+    else
+      markup = Routes.show_academic_offer_like_options(response)
+      bot.api.send_message(chat_id: message.chat.id, text: 'Seleccione la materia para consultar tu estado', reply_markup: markup)
+    end
   end
 
   on_message '/nota' do |bot, message|
-    markup = Routes.show_academic_offer_like_options(Routes.send_get(nil, 'materias'))
-    bot.api.send_message(chat_id: message.chat.id, text: 'Seleccione la materia para consultar tu nota', reply_markup: markup)
+    params = { usernameAlumno: message.from.username }
+    response = Routes.send_get(params, 'materias')
+    request_body = JSON.parse(response.body.gsub('\"', '"'))
+    if !request_body['error'].nil?
+      bot.api.send_message(chat_id: message.chat.id, text: request_body['error'])
+    else
+      markup = Routes.show_academic_offer_like_options(response)
+      bot.api.send_message(chat_id: message.chat.id, text: 'Seleccione la materia para consultar tu nota', reply_markup: markup)
+    end
   end
 
   on_response_to 'Seleccione la materia para consultar tu estado' do |bot, message|
@@ -30,7 +53,11 @@ class RoutesInscription < Routes
     params = { codigoMateria: code_message.to_s, usernameAlumno: message.from.username }
     response = Routes.send_get(params, 'materias/estado')
     request_body = JSON.parse(response.body.gsub('\"', '"'))
-    bot.api.send_message(chat_id: message.message.chat.id, text: request_body['estado'])
+    if !request_body['error'].nil?
+      bot.api.send_message(chat_id: message.chat.id, text: request_body['error'])
+    else
+      bot.api.send_message(chat_id: message.message.chat.id, text: request_body['estado'])
+    end
   end
 
   on_response_to 'Seleccione la materia para la inscripcion' do |bot, message|
@@ -40,9 +67,9 @@ class RoutesInscription < Routes
     response = Routes.send_post(params, 'alumnos')
     request_body = JSON.parse(response.body.gsub('\"', '"'))
     if request_body['error'].nil?
-      bot.api.send_message(chat_id: message.message.chat.id, text: request_body['resultado'])
+      bot.api.send_message(chat_id: message.chat.id, text: request_body['resultado'])
     else
-      bot.api.send_message(chat_id: message.message.chat.id, text: request_body['error'])
+      bot.api.send_message(chat_id: message.chat.id, text: request_body['error'])
     end
   end
 
@@ -51,15 +78,21 @@ class RoutesInscription < Routes
     params = { codigoMateria: code_message.to_s, usernameAlumno: message.from.username }
     response = Routes.send_get(params, 'materias/estado')
     request_body = JSON.parse(response.body.gsub('\"', '"'))
-    final_grade = request_body['nota_final'].nil? ? 'Alumno no inscripto o no calificado' : request_body['nota_final']
-    bot.api.send_message(chat_id: message.message.chat.id, text: final_grade)
+    if !request_body['error'].nil?
+      bot.api.send_message(chat_id: message.chat.id, text: request_body['error'])
+    else
+      final_grade = request_body['nota_final'].nil? ? 'Alumno no inscripto o no calificado' : request_body['nota_final']
+      bot.api.send_message(chat_id: message.message.chat.id, text: final_grade)
+    end
   end
 
   on_message '/misInscripciones' do |bot, message|
     params = { usernameAlumno: message.from.username }
     response = Routes.send_get(params, 'inscripciones')
     response_json = JSON.parse(response.body)
-    if response_json['inscripciones'] == []
+    if !response_json['error'].nil?
+      bot.api.send_message(chat_id: message.chat.id, text: response_json['error'])
+    elsif response_json['inscripciones'] == []
       bot.api.send_message(chat_id: message.chat.id, text: 'No tenes inscripciones')
     else
       Routes.show_subjects_like_info(bot, message, response_json, 'inscripciones')
