@@ -1,5 +1,4 @@
 require File.dirname(__FILE__) + '/../lib/routing'
-
 class Routes
   include Routing
 
@@ -20,15 +19,9 @@ Para listar los comandos disponibles por favor envia /help")
     bot.api.send_message(chat_id: message.chat.id, text: 'Uh? No te entiendo! Podes ver los comandos disponibles con /help')
   end
 
-  def self.show_academic_offer_like_options(response)
-    send_get(nil, 'materias')
-    subjects = JSON.parse(response.body)
-    Routes.show_subjects(subjects)
-  end
-
   def self.show_subjects(subjects)
     button_subjects = []
-    subjects['oferta'].each do |subject|
+    subjects.each do |subject|
       button_subjects.push(Telegram::Bot::Types::InlineKeyboardButton.new(text: subject['materia'], callback_data: subject['codigo']))
     end
     markup = Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: button_subjects)
