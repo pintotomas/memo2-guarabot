@@ -23,7 +23,7 @@ Para listar los comandos disponibles por favor envia /help")
   def self.show_subjects(subjects)
     button_subjects = []
     subjects.each do |subject|
-      button_subjects.push(Telegram::Bot::Types::InlineKeyboardButton.new(text: subject['materia'], callback_data: subject['codigo']))
+      button_subjects.push(Telegram::Bot::Types::InlineKeyboardButton.new(text: subject['name'], callback_data: subject['id']))
     end
     markup = Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: button_subjects)
     markup

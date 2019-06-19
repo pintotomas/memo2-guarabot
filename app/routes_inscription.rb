@@ -1,3 +1,4 @@
+
 class RoutesInscription < Routes
   on_message '/oferta' do |bot, message|
     params = { usernameAlumno: message.from.username }
@@ -14,24 +15,24 @@ class RoutesInscription < Routes
 
   on_message '/inscripcion' do |bot, message|
     params = { usernameAlumno: message.from.username }
-    response = Routes.send_get(params, 'inscripciones')
+    response = Routes.send_get(params, 'materias/all')
     request_body = JSON.parse(response.body.gsub('\"', '"'))
     if !request_body['error'].nil?
       bot.api.send_message(chat_id: message.chat.id, text: request_body['error'])
     else
-      markup = Routes.show_subjects(request_body['inscripciones'])
+      markup = Routes.show_subjects(request_body['materias'])
       bot.api.send_message(chat_id: message.chat.id, text: 'Seleccione la materia para la inscripcion', reply_markup: markup)
     end
   end
 
   on_message '/estado' do |bot, message|
     params = { usernameAlumno: message.from.username }
-    response = Routes.send_get(params, 'inscripciones')
+    response = Routes.send_get(params, 'materias/all')
     request_body = JSON.parse(response.body.gsub('\"', '"'))
     if !request_body['error'].nil?
       bot.api.send_message(chat_id: message.chat.id, text: request_body['error'])
     else
-      markup = Routes.show_subjects(request_body['inscripciones'])
+      markup = Routes.show_subjects(request_body['materias'])
       bot.api.send_message(chat_id: message.chat.id, text: 'Seleccione la materia para consultar tu estado', reply_markup: markup)
     end
   end
@@ -48,12 +49,12 @@ class RoutesInscription < Routes
 
   on_message '/nota' do |bot, message|
     params = { usernameAlumno: message.from.username }
-    response = Routes.send_get(params, 'inscripciones')
+    response = Routes.send_get(params, 'materias/all')
     request_body = JSON.parse(response.body.gsub('\"', '"'))
     if !request_body['error'].nil?
       bot.api.send_message(chat_id: message.chat.id, text: request_body['error'])
     else
-      markup = Routes.show_subjects(request_body['inscripciones'])
+      markup = Routes.show_subjects(request_body['materias'])
       bot.api.send_message(chat_id: message.chat.id, text: 'Seleccione la materia para consultar tu nota', reply_markup: markup)
     end
   end
