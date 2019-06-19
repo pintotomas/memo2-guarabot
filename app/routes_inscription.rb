@@ -14,36 +14,36 @@ class RoutesInscription < Routes
 
   on_message '/inscripcion' do |bot, message|
     params = { usernameAlumno: message.from.username }
-    response = Routes.send_get(params, 'materias')
+    response = Routes.send_get(params, 'inscripciones')
     request_body = JSON.parse(response.body.gsub('\"', '"'))
     if !request_body['error'].nil?
       bot.api.send_message(chat_id: message.chat.id, text: request_body['error'])
     else
-      markup = Routes.show_academic_offer_like_options(response)
+      markup = Routes.show_subjects(request_body['inscripciones'])
       bot.api.send_message(chat_id: message.chat.id, text: 'Seleccione la materia para la inscripcion', reply_markup: markup)
     end
   end
 
   on_message '/estado' do |bot, message|
     params = { usernameAlumno: message.from.username }
-    response = Routes.send_get(params, 'materias')
+    response = Routes.send_get(params, 'inscripciones')
     request_body = JSON.parse(response.body.gsub('\"', '"'))
     if !request_body['error'].nil?
       bot.api.send_message(chat_id: message.chat.id, text: request_body['error'])
     else
-      markup = Routes.show_academic_offer_like_options(response)
+      markup = Routes.show_subjects(request_body['inscripciones'])
       bot.api.send_message(chat_id: message.chat.id, text: 'Seleccione la materia para consultar tu estado', reply_markup: markup)
     end
   end
 
   on_message '/nota' do |bot, message|
     params = { usernameAlumno: message.from.username }
-    response = Routes.send_get(params, 'materias')
+    response = Routes.send_get(params, 'inscripciones')
     request_body = JSON.parse(response.body.gsub('\"', '"'))
     if !request_body['error'].nil?
       bot.api.send_message(chat_id: message.chat.id, text: request_body['error'])
     else
-      markup = Routes.show_academic_offer_like_options(response)
+      markup = Routes.show_subjects(request_body['inscripciones'])
       bot.api.send_message(chat_id: message.chat.id, text: 'Seleccione la materia para consultar tu nota', reply_markup: markup)
     end
   end
