@@ -36,4 +36,5 @@ Naming/UncommunicativeMethodParamName:
   Enabled: false
 Metrics/AbcSize:
   Enabled: false
-
+Metrics/ClassLength:
+  Max: 120

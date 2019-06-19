@@ -36,6 +36,16 @@ class RoutesInscription < Routes
     end
   end
 
+  on_message '/promedio' do |bot, message|
+    params = { usernameAlumno: message.from.username }
+    response = Routes.send_get(params, 'alumnos/promedio')
+    request_body = JSON.parse(response.body.gsub('\"', '"'))
+    approved_subjects_quantity = request_body['materias_aprobadas']
+    average = request_body['nota_promedio'] || 0 # Feo pero no se puede cambiar la API (fitnesse)
+    promedio_response = 'Aprobaste ' + String(approved_subjects_quantity) + ' materia(s) y tu promedio es ' + String(average)
+    bot.api.send_message(chat_id: message.chat.id, text: promedio_response)
+  end
+
   on_message '/nota' do |bot, message|
     params = { usernameAlumno: message.from.username }
     response = Routes.send_get(params, 'inscripciones')
