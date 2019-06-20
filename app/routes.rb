@@ -13,6 +13,7 @@ Para listar los comandos disponibles por favor envia /help")
     bot.api.send_message(chat_id: message.chat.id, text: '/estado Permite consultar tu estado en una materia')
     bot.api.send_message(chat_id: message.chat.id, text: '/nota Permite consultar tu nota en una materia')
     bot.api.send_message(chat_id: message.chat.id, text: '/misInscripciones Muestra tus inscripciones')
+    bot.api.send_message(chat_id: message.chat.id, text: '/promedio Muestra tu cantidad de materias aprobadas y el promedio')
   end
 
   default do |bot, message|
@@ -22,7 +23,7 @@ Para listar los comandos disponibles por favor envia /help")
   def self.show_subjects(subjects)
     button_subjects = []
     subjects.each do |subject|
-      button_subjects.push(Telegram::Bot::Types::InlineKeyboardButton.new(text: subject['materia'], callback_data: subject['codigo']))
+      button_subjects.push(Telegram::Bot::Types::InlineKeyboardButton.new(text: subject['name'], callback_data: subject['id']))
     end
     markup = Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: button_subjects)
     markup
@@ -58,7 +59,7 @@ Para listar los comandos disponibles por favor envia /help")
   def self.show_subjects_like_info(bot, message, response_json, property)
     response_json[property].each do |subject_info|
       text = ''
-      text = text + 'Materia: ' + subject_info['materia'] + ', Codigo:' + String(subject_info['codigo']) + ', Docente:' + subject_info['docente']
+      text = text + 'Materia: ' + subject_info['nombre'] + ', Codigo:' + String(subject_info['codigo']) + ', Docente:' + subject_info['docente']
       bot.api.send_message(chat_id: message.chat.id, text: text)
     end
   end

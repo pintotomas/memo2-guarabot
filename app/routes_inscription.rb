@@ -14,36 +14,46 @@ class RoutesInscription < Routes
 
   on_message '/inscripcion' do |bot, message|
     params = { usernameAlumno: message.from.username }
-    response = Routes.send_get(params, 'inscripciones')
+    response = Routes.send_get(params, 'materias/all')
     request_body = JSON.parse(response.body.gsub('\"', '"'))
     if !request_body['error'].nil?
       bot.api.send_message(chat_id: message.chat.id, text: request_body['error'])
     else
-      markup = Routes.show_subjects(request_body['inscripciones'])
+      markup = Routes.show_subjects(request_body['materias'])
       bot.api.send_message(chat_id: message.chat.id, text: 'Seleccione la materia para la inscripcion', reply_markup: markup)
     end
   end
 
   on_message '/estado' do |bot, message|
     params = { usernameAlumno: message.from.username }
-    response = Routes.send_get(params, 'inscripciones')
+    response = Routes.send_get(params, 'materias/all')
     request_body = JSON.parse(response.body.gsub('\"', '"'))
     if !request_body['error'].nil?
       bot.api.send_message(chat_id: message.chat.id, text: request_body['error'])
     else
-      markup = Routes.show_subjects(request_body['inscripciones'])
+      markup = Routes.show_subjects(request_body['materias'])
       bot.api.send_message(chat_id: message.chat.id, text: 'Seleccione la materia para consultar tu estado', reply_markup: markup)
     end
   end
 
+  on_message '/promedio' do |bot, message|
+    params = { usernameAlumno: message.from.username }
+    response = Routes.send_get(params, 'alumnos/promedio')
+    request_body = JSON.parse(response.body.gsub('\"', '"'))
+    approved_subjects_quantity = request_body['materias_aprobadas']
+    average = request_body['nota_promedio'] || 0 # Feo pero no se puede cambiar la API (fitnesse)
+    promedio_response = 'Aprobaste ' + String(approved_subjects_quantity) + ' materia(s) y tu promedio es ' + String(average)
+    bot.api.send_message(chat_id: message.chat.id, text: promedio_response)
+  end
+
   on_message '/nota' do |bot, message|
     params = { usernameAlumno: message.from.username }
-    response = Routes.send_get(params, 'inscripciones')
+    response = Routes.send_get(params, 'materias/all')
     request_body = JSON.parse(response.body.gsub('\"', '"'))
     if !request_body['error'].nil?
       bot.api.send_message(chat_id: message.chat.id, text: request_body['error'])
     else
-      markup = Routes.show_subjects(request_body['inscripciones'])
+      markup = Routes.show_subjects(request_body['materias'])
       bot.api.send_message(chat_id: message.chat.id, text: 'Seleccione la materia para consultar tu nota', reply_markup: markup)
     end
   end
