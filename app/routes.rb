@@ -59,7 +59,7 @@ Para listar los comandos disponibles por favor envia /help")
   def self.show_subjects_like_info(bot, message, response_json, property)
     response_json[property].each do |subject_info|
       text = ''
-      text = text + 'Materia: ' + subject_info['nombre'] + ', Codigo:' + String(subject_info['codigo']) + ', Docente:' + subject_info['docente'] + ', Cupos Disponibles:' + String(subject_info['cupo_disponible'])
+      text = text + 'Materia: ' + subject_info['nombre'] + ', Codigo:' + String(subject_info['codigo']) + ', Docente:' + subject_info['docente'] + ', Cupos Disponibles:' + String(subject_info['cupo_disponible']) + ', Modalidad:' + String(subject_info['modalidad'])
       bot.api.send_message(chat_id: message.chat.id, text: text)
     end
   end
