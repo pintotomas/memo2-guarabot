@@ -107,7 +107,7 @@ class RoutesInscription < Routes
     elsif response_json['inscripciones'] == []
       bot.api.send_message(chat_id: message.chat.id, text: 'No tenes inscripciones')
     else
-      Routes.show_subjects_like_info(bot, message, response_json, 'inscripciones')
+      Routes.show_subjects_like_summary_info(bot, message, response_json, 'inscripciones')
     end
   end
 end
