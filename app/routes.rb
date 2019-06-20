@@ -64,7 +64,7 @@ Para listar los comandos disponibles por favor envia /help")
              ', Docente: ' + subject_info['docente'] +
              ', Cupos Disponibles: ' +
              String(subject_info['cupo_disponible']) +
-             ', Modalidad:' + String(subject_info['modalidad'])
+             ', Modalidad: ' + String(subject_info['modalidad'])
       bot.api.send_message(chat_id: message.chat.id, text: text)
     end
   end
