@@ -64,7 +64,7 @@ Para listar los comandos disponibles por favor envia /help")
              ', Docente: ' + subject_info['docente'] +
              ', Cupos Disponibles: ' +
              String(subject_info['cupo_disponible']) +
-             ', Modalidad:' + String(subject_info['modalidad'])
+             ', Modalidad: ' + String(subject_info['modalidad'])
       bot.api.send_message(chat_id: message.chat.id, text: text)
     end
   end
@@ -75,7 +75,7 @@ Para listar los comandos disponibles por favor envia /help")
       text = text + 'Materia: ' + subject_info['nombre'] +
              ', Codigo: ' + String(subject_info['codigo']) +
              ', Docente: ' + subject_info['docente']
-      bot.api.send_message(chat_id: message.chat.id, text: text)
+        bot.api.send_message(chat_id: message.chat.id, text: text)
     end
   end
 end
