@@ -58,9 +58,13 @@ Para listar los comandos disponibles por favor envia /help')
   describe 'External requests' do
     it 'get academic offer for ingresante' do
       uri = URI('http://invernalia-guaraapi.herokuapp.com/materias/all?usernameAlumno=ingresante')
-      response = Net::HTTP.get(uri)
-      expect(response).to be_an_instance_of(String)
-      expect(JSON.parse(response)['materias'].length).to eq 1
+      req = Net::HTTP::Get.new(uri)
+      req['API_KEY'] = 'fake_key'
+      response = Net::HTTP.start(uri.hostname, uri.port) do |http|
+        http.request(req)
+      end
+      expect(response.body).to be_an_instance_of(String)
+      expect(JSON.parse(response.body)['materias'].length).to eq 1
     end
   end
 end

@@ -18,8 +18,8 @@ require 'dotenv/load'
 # "http://invernalia-guaraapi.herokuapp.com/materias/all?usernameAlumno=ingresante"
 RSpec.configure do |config|
   config.before(:each) do
-    stub_request(:get, /invernalia-guaraapi.herokuapp.com/)
-      .with(headers: { 'Accept' => '*/*', 'User-Agent' => 'Ruby' })
+    stub_request(:get, 'http://invernalia-guaraapi.herokuapp.com/materias/all?usernameAlumno=ingresante')
+      .with(headers: { 'Accept' => '*/*', 'User-Agent' => 'Ruby', 'API_KEY' => 'fake_key' })
       .to_return(status: 200,
                  body:
                  '{"materias":[{"id":1001,"name":"Memo2","professor":"Linus Torvalds",
