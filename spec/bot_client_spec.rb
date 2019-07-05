@@ -56,7 +56,7 @@ Para listar los comandos disponibles por favor envia /help')
     app.run_once
   end
   describe 'External requests' do
-    it 'get academic offer for ingresante' do
+    it '/oferta external requests for ingresante' do
       uri = URI('http://invernalia-guaraapi.herokuapp.com/materias/all?usernameAlumno=ingresante')
       req = Net::HTTP::Get.new(uri)
       req['API_KEY'] = 'fake_key'
@@ -65,6 +65,17 @@ Para listar los comandos disponibles por favor envia /help')
       end
       expect(response.body).to be_an_instance_of(String)
       expect(JSON.parse(response.body)['materias'].length).to eq 1
+    end
+
+    it '/inscripciones external requests for ingresante' do
+      uri = URI('http://invernalia-guaraapi.herokuapp.com/inscripciones?usernameAlumno=pepito')
+      req = Net::HTTP::Get.new(uri)
+      req['API_KEY'] = 'fake_key'
+      response = Net::HTTP.start(uri.hostname, uri.port) do |http|
+        http.request(req)
+      end
+      expect(response.body).to be_an_instance_of(String)
+      expect(JSON.parse(response.body)['inscripciones'].length).to eq 0
     end
   end
 end

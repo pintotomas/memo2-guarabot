@@ -24,6 +24,9 @@ RSpec.configure do |config|
                  body:
                  '{"materias":[{"id":1001,"name":"Memo2","professor":"Linus Torvalds",
                  "created_on":"2019-06-27","updated_on":null,"quota":2,"type":"tareas","requires_proyector":false,"requires_lab":false}]}')
+    stub_request(:get, 'http://invernalia-guaraapi.herokuapp.com/inscripciones?usernameAlumno=pepito')
+      .with(headers: { 'Accept' => '*/*', 'User-Agent' => 'Ruby', 'API_KEY' => 'fake_key' })
+      .to_return(status: 200, body: '{"inscripciones":[]}')
   end
 end
 RSpec.configure do |config|
