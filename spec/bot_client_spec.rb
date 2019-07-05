@@ -1,5 +1,7 @@
 require 'spec_helper'
 require 'web_mock'
+require 'byebug'
+WebMock.disable_net_connect!(allow_localhost: true)
 # Uncomment to use VCR
 # require 'vcr_helper'
 
@@ -52,5 +54,13 @@ Para listar los comandos disponibles por favor envia /help')
     app = BotClient.new(token)
 
     app.run_once
+  end
+  describe 'External requests' do
+    it 'get academic offer for ingresante' do
+      uri = URI('http://invernalia-guaraapi.herokuapp.com/materias/all?usernameAlumno=ingresante')
+      response = Net::HTTP.get(uri)
+      expect(response).to be_an_instance_of(String)
+      expect(JSON.parse(response)['materias'].length).to eq 1
+    end
   end
 end
