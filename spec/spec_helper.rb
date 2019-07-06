@@ -27,6 +27,18 @@ RSpec.configure do |config|
     stub_request(:get, 'http://invernalia-guaraapi.herokuapp.com/inscripciones?usernameAlumno=pepito')
       .with(headers: { 'Accept' => '*/*', 'User-Agent' => 'Ruby', 'API_KEY' => 'fake_key' })
       .to_return(status: 200, body: '{"inscripciones":[]}')
+    stub_request(:get, 'http://api.telegram.org:443/bot87123879::AAF1823/sendMessage?chat_id=182381&text=/inscripcion')
+      .with(headers: {
+              'Accept' => '*/*',
+              'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+              'Api-Key' => 'fake_key',
+              'Host' => 'api.telegram.org',
+              'User-Agent' => 'Ruby'
+            })
+      .to_return(status: 200, body: [{ 'chat_id' => '141733544',
+                                       'reply_markup' =>
+                                        '{"inline_keyboard":[[{"text":"Memo2","callback_data":"1"}],[{"text":"Algo1","callback_data":"2"}],[{"text":"Organizacion de Datos","callback_data":"3"}]]}',
+                                       'text' => 'Seleccione la materia para la inscripcion' }], headers: {})
   end
 end
 RSpec.configure do |config|
