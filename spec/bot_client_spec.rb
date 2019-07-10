@@ -112,6 +112,15 @@ Para listar los comandos disponibles por favor envia /help')
     expect(response.body[0]['text']).to eq 'Seleccione la materia para consultar tu estado'
   end
 
+  it '/estado devuelve error' do
+    token = 'fake_token'
+    stub_get_updates_for(token, '/estado', 'roberto')
+
+    stub_send_message(token, 'error en el estado')
+    app = BotClient.new(token)
+    app.run_once
+  end
+
   describe 'External requests' do
     it '/oferta devuelve las materias con todos los campos' do
       token = 'fake_token'
