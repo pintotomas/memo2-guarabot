@@ -122,6 +122,15 @@ Para listar los comandos disponibles por favor envia /help')
       app.run_once
     end
 
+    it '/oferta devuelve mensaje esperado cuando no hay materias' do
+      token = 'fake_token'
+      stub_get_updates_for(token, '/oferta', 'falafel')
+
+      stub_send_message(token, 'No hay oferta academica')
+      app = BotClient.new(token)
+      app.run_once
+    end
+
     it '/inscripciones external requests for ingresante' do
       uri = URI('http://invernalia-guaraapi.herokuapp.com/inscripciones?usernameAlumno=pepito')
       req = Net::HTTP::Get.new(uri)
