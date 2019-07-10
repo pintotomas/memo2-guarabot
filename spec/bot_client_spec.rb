@@ -19,6 +19,18 @@ def stub_get_updates(token, message_text)
     .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })
 end
 
+def stub_get_updates_for(token, message_text, user)
+  body = { "ok": true, "result": [{ "update_id": 693_981_718,
+                                    "message": { "message_id": 11,
+                                                 "from": { "id": 141_733_544, "is_bot": false, "first_name": 'Tomas', "last_name": 'Pinto', "username": user, "language_code": 'en' },
+                                                 "chat": { "id": 141_733_544, "first_name": 'Tomas', "last_name": 'Pinto', "username": user, "type": 'private' },
+                                                 "date": 1_557_782_998, "text": message_text,
+                                                 "entities": [{ "offset": 0, "length": 6, "type": 'bot_command' }] } }] }
+
+  stub_request(:any, "https://api.telegram.org/bot#{token}/getUpdates")
+    .to_return(body: body.to_json, status: 200, headers: { 'Content-Length' => 3 })
+end
+
 def stub_send_message(token, message_text)
   body = { "ok": true,
            "result": { "message_id": 12,
@@ -105,6 +117,27 @@ Para listar los comandos disponibles por favor envia /help')
       end
       expect(response.body).to be_an_instance_of(String)
       expect(JSON.parse(response.body)['materias'].length).to eq 1
+    end
+
+    it '/oferta devuelve las materias con todos los campos' do # rubocop:disable RSpec/ExampleLength
+      token = 'fake_token'
+      stub_get_updates_for(token, '/oferta', 'ingresante')
+      stub_request(:get, 'http://localhost:3000/materias?usernameAlumno=ingresante')
+        .with(
+          headers: {
+            'Accept' => '*/*',
+            'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+            'Api-Token' => 'CPLpXxWL8TvM7IXmBRVlRWFiHIbk0jDu',
+            'User-Agent' => 'Faraday v0.15.4'
+          }
+        )
+        .to_return(status: 200,
+                   body:
+      '{"oferta":[{"codigo":1001,"nombre":"Memo2","docente":"Linus Torvalds",
+      "cupo_disponible":2,"modalidad":"tareas"}]}')
+      stub_send_message(token, 'Materia: Memo2, Codigo: 1001, Docente: Linus Torvalds, Cupos Disponibles: 2, Modalidad: tareas')
+      app = BotClient.new(token)
+      app.run_once
     end
 
     it '/inscripciones external requests for ingresante' do
