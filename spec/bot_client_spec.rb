@@ -4,7 +4,6 @@ require 'byebug'
 WebMock.disable_net_connect!(allow_localhost: false)
 # Uncomment to use VCR
 # require 'vcr_helper'
-
 require File.dirname(__FILE__) + '/../app/bot_client'
 
 def stub_get_updates(token, message_text)
@@ -68,6 +67,17 @@ Para listar los comandos disponibles por favor envia /help')
     app.run_once
   end
 
+  it '/help command' do
+    token = 'fake_token'
+
+    stub_get_updates(token, '/help')
+    stub_send_message(token, '/oferta Muestra la oferta academica')
+
+    app = BotClient.new(token)
+
+    app.run_once
+  end
+
   it '/inscripciones responds with inline keyboard' do
     chat_id = 182_381
     bot_token = '87123879::AAF1823'
@@ -82,16 +92,11 @@ Para listar los comandos disponibles por favor envia /help')
   end
 
   it '/nota responds with inline keyboard' do
-    chat_id = 182_381
-    bot_token = '87123879::AAF1823'
-    uri = URI("https://api.telegram.org/bot#{bot_token}/sendMessage?chat_id=#{chat_id}&text=/nota")
-    req = Net::HTTP::Get.new(uri)
-    req['API_KEY'] = 'fake_key'
-    response = Net::HTTP.start(uri.hostname, uri.port) do |http|
-      http.request(req)
-    end
-    expect(JSON.parse(response.body[0]['reply_markup']).key?('inline_keyboard')).to eq true
-    expect(response.body[0]['text']).to eq 'Seleccione la materia para consultar tu nota'
+    token = 'fake_token'
+    stub_get_updates_for(token, '/nota', 'ingresante')
+    stub_send_message(token, 'Seleccione la materia para consultar tu nota')
+    app = BotClient.new(token)
+    app.run_once
   end
 
   it '/estado responds with inline keyboard' do
@@ -108,34 +113,10 @@ Para listar los comandos disponibles por favor envia /help')
   end
 
   describe 'External requests' do
-    it '/oferta external requests for ingresante' do
-      uri = URI('http://invernalia-guaraapi.herokuapp.com/materias/all?usernameAlumno=ingresante')
-      req = Net::HTTP::Get.new(uri)
-      req['API_KEY'] = 'fake_key'
-      response = Net::HTTP.start(uri.hostname, uri.port) do |http|
-        http.request(req)
-      end
-      expect(response.body).to be_an_instance_of(String)
-      expect(JSON.parse(response.body)['materias'].length).to eq 1
-    end
-
-    it '/oferta devuelve las materias con todos los campos' do # rubocop:disable RSpec/ExampleLength
+    it '/oferta devuelve las materias con todos los campos' do
       token = 'fake_token'
       stub_get_updates_for(token, '/oferta', 'ingresante')
-      base_api_url = ENV['URL_API']
-      stub_request(:get, base_api_url + 'materias?usernameAlumno=ingresante')
-        .with(
-          headers: {
-            'Accept' => '*/*',
-            'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-            'Api-Token' => 'CPLpXxWL8TvM7IXmBRVlRWFiHIbk0jDu',
-            'User-Agent' => 'Faraday v0.15.4'
-          }
-        )
-        .to_return(status: 200,
-                   body:
-      '{"oferta":[{"codigo":1001,"nombre":"Memo2","docente":"Linus Torvalds",
-      "cupo_disponible":2,"modalidad":"tareas"}]}')
+
       stub_send_message(token, 'Materia: Memo2, Codigo: 1001, Docente: Linus Torvalds, Cupos Disponibles: 2, Modalidad: tareas')
       app = BotClient.new(token)
       app.run_once
@@ -172,27 +153,12 @@ Para listar los comandos disponibles por favor envia /help')
       app.run_once
     end
 
-    it '/promedio external requests for ingresante' do
-      uri = URI('http://invernalia-guaraapi.herokuapp.com/alumnos/promedio?usernameAlumno=ingresante')
-      req = Net::HTTP::Get.new(uri)
-      req['API_KEY'] = 'fake_key'
-      response = Net::HTTP.start(uri.hostname, uri.port) do |http|
-        http.request(req)
-      end
-      expect(response.body).to be_an_instance_of(String)
-      expect(JSON.parse(response.body)['materias_aprobadas']).to eq 2
-      expect(JSON.parse(response.body)['nota_promedio']).to eq 9
-    end
-
-    it '/nota external requests for ingresante' do
-      uri = URI('http://invernalia-guaraapi.herokuapp.com/materias/estado?usernameAlumno=ingresante&codigoMateria=1009')
-      req = Net::HTTP::Get.new(uri)
-      req['API_KEY'] = 'fake_key'
-      response = Net::HTTP.start(uri.hostname, uri.port) do |http|
-        http.request(req)
-      end
-      expect(response.body).to be_an_instance_of(String)
-      expect(JSON.parse(response.body)['nota_final']).to eq 4
+    it '/promedio ingresante' do
+      token = 'fake_token'
+      stub_get_updates_for(token, '/promedio', 'ingresante')
+      stub_send_message(token, 'Aprobaste 5 materia(s) y tu promedio es 7.75')
+      app = BotClient.new(token)
+      app.run_once
     end
   end
 end
