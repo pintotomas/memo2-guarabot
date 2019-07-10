@@ -113,34 +113,10 @@ Para listar los comandos disponibles por favor envia /help')
   end
 
   describe 'External requests' do
-    # it '/oferta external requests for ingresante' do
-    #  uri = URI('http://invernalia-guaraapi.herokuapp.com/materias/all?usernameAlumno=ingresante')
-    #  req = Net::HTTP::Get.new(uri)
-    #  req['API_KEY'] = 'fake_key'
-    #  response = Net::HTTP.start(uri.hostname, uri.port) do |http|
-    #    http.request(req)
-    #  end
-    #  expect(response.body).to be_an_instance_of(String)
-    #  expect(JSON.parse(response.body)['materias'].length).to eq 1
-    # end
-
-    it '/oferta devuelve las materias con todos los campos' do # rubocop:disable RSpec/ExampleLength
+    it '/oferta devuelve las materias con todos los campos' do
       token = 'fake_token'
       stub_get_updates_for(token, '/oferta', 'ingresante')
-      base_api_url = ENV['URL_API']
-      stub_request(:get, base_api_url + 'materias?usernameAlumno=ingresante')
-        .with(
-          headers: {
-            'Accept' => '*/*',
-            'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-            'Api-Token' => 'CPLpXxWL8TvM7IXmBRVlRWFiHIbk0jDu',
-            'User-Agent' => 'Faraday v0.15.4'
-          }
-        )
-        .to_return(status: 200,
-                   body:
-      '{"oferta":[{"codigo":1001,"nombre":"Memo2","docente":"Linus Torvalds",
-      "cupo_disponible":2,"modalidad":"tareas"}]}')
+
       stub_send_message(token, 'Materia: Memo2, Codigo: 1001, Docente: Linus Torvalds, Cupos Disponibles: 2, Modalidad: tareas')
       app = BotClient.new(token)
       app.run_once
