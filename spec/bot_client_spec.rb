@@ -67,6 +67,17 @@ Para listar los comandos disponibles por favor envia /help')
     app.run_once
   end
 
+  it '/help command' do
+    token = 'fake_token'
+
+    stub_get_updates(token, '/help')
+    stub_send_message(token, '/oferta Muestra la oferta academica')
+
+    app = BotClient.new(token)
+
+    app.run_once
+  end
+
   it '/inscripciones responds with inline keyboard' do
     chat_id = 182_381
     bot_token = '87123879::AAF1823'
