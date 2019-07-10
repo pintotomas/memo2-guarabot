@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'web_mock'
 require 'byebug'
-WebMock.disable_net_connect!(allow_localhost: true)
+WebMock.disable_net_connect!(allow_localhost: false)
 # Uncomment to use VCR
 # require 'vcr_helper'
 require File.dirname(__FILE__) + '/../app/bot_client'
@@ -151,27 +151,24 @@ Para listar los comandos disponibles por favor envia /help')
       expect(JSON.parse(response.body)['inscripciones'].length).to eq 0
     end
 
-    it '/promedio external requests for ingresante' do
-      uri = URI('http://invernalia-guaraapi.herokuapp.com/alumnos/promedio?usernameAlumno=ingresante')
-      req = Net::HTTP::Get.new(uri)
-      req['API_KEY'] = 'fake_key'
-      response = Net::HTTP.start(uri.hostname, uri.port) do |http|
-        http.request(req)
-      end
-      expect(response.body).to be_an_instance_of(String)
-      expect(JSON.parse(response.body)['materias_aprobadas']).to eq 2
-      expect(JSON.parse(response.body)['nota_promedio']).to eq 9
-    end
+    # it '/promedio external requests for ingresante' do
+    #  uri = URI('http://invernalia-guaraapi.herokuapp.com/alumnos/promedio?usernameAlumno=ingresante')
+    #  req = Net::HTTP::Get.new(uri)
+    #  req['API_KEY'] = 'fake_key'
+    #  response = Net::HTTP.start(uri.hostname, uri.port) do |http|
+    #    http.request(req)
+    #  end
+    #  expect(response.body).to be_an_instance_of(String)
+    #  expect(JSON.parse(response.body)['materias_aprobadas']).to eq 2
+    #  expect(JSON.parse(response.body)['nota_promedio']).to eq 9
+    # end
 
-    it '/nota external requests for ingresante' do
-      uri = URI('http://invernalia-guaraapi.herokuapp.com/materias/estado?usernameAlumno=ingresante&codigoMateria=1009')
-      req = Net::HTTP::Get.new(uri)
-      req['API_KEY'] = 'fake_key'
-      response = Net::HTTP.start(uri.hostname, uri.port) do |http|
-        http.request(req)
-      end
-      expect(response.body).to be_an_instance_of(String)
-      expect(JSON.parse(response.body)['nota_final']).to eq 4
+    it '/promedio ingresante' do
+      token = 'fake_token'
+      stub_get_updates_for(token, '/promedio', 'ingresante')
+      stub_send_message(token, 'Aprobaste 5 materia(s) y tu promedio es 7.75')
+      app = BotClient.new(token)
+      app.run_once
     end
   end
 end

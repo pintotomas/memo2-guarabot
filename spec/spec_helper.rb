@@ -57,11 +57,19 @@ end
 
 RSpec.configure do |config|
   config.before(:each) do
-    stub_request(:get, 'http://invernalia-guaraapi.herokuapp.com/alumnos/promedio?usernameAlumno=ingresante')
-      .with(headers: { 'Accept' => '*/*', 'User-Agent' => 'Ruby', 'API_KEY' => 'fake_key' })
+    base_api_url = ENV['URL_API']
+    stub_request(:get, base_api_url + 'alumnos/promedio?usernameAlumno=ingresante')
+      .with(
+        headers: {
+          'Accept' => '*/*',
+          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+          'Api-Token' => 'CPLpXxWL8TvM7IXmBRVlRWFiHIbk0jDu',
+          'User-Agent' => 'Faraday v0.15.4'
+        }
+      )
       .to_return(status: 200,
                  body:
-               '{"materias_aprobadas":2, "nota_promedio": 9}')
+    '{"materias_aprobadas": 5, "nota_promedio": 7.75}')
   end
 end
 
