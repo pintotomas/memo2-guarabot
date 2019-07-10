@@ -131,6 +131,15 @@ Para listar los comandos disponibles por favor envia /help')
       app.run_once
     end
 
+    it '/oferta devuelve error' do
+      token = 'fake_token'
+      stub_get_updates_for(token, '/oferta', 'erroroferta')
+
+      stub_send_message(token, 'error en la oferta')
+      app = BotClient.new(token)
+      app.run_once
+    end
+
     it '/inscripciones external requests for ingresante' do
       uri = URI('http://invernalia-guaraapi.herokuapp.com/inscripciones?usernameAlumno=pepito')
       req = Net::HTTP::Get.new(uri)
