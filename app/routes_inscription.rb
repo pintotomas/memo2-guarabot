@@ -102,6 +102,7 @@ class RoutesInscription < Routes
     params = { usernameAlumno: message.from.username }
     response = Routes.send_get(params, 'inscripciones')
     response_json = JSON.parse(response.body)
+    puts response_json
     if !response_json['error'].nil?
       bot.api.send_message(chat_id: message.chat.id, text: response_json['error'])
     elsif response_json['inscripciones'] == []

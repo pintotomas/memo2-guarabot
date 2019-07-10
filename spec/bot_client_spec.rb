@@ -191,6 +191,14 @@ Para listar los comandos disponibles por favor envia /help')
       app.run_once
     end
 
+    it '/misInscripciones tiene inscripciones' do
+      token = 'fake_token'
+      stub_get_updates_for(token, '/misInscripciones', 'ingresanteConInscripciones')
+      stub_send_message(token, 'Materia: Algo3, Codigo: 7507, Docente: Carlos Fontela')
+      app = BotClient.new(token)
+      app.run_once
+    end
+
     it '/promedio ingresante' do
       token = 'fake_token'
       stub_get_updates_for(token, '/promedio', 'ingresante')

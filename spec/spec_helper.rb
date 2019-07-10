@@ -192,6 +192,24 @@ end
 RSpec.configure do |config|
   config.before(:each) do
     base_api_url = ENV['URL_API']
+    stub_request(:get, base_api_url + 'inscripciones?usernameAlumno=ingresanteConInscripciones')
+      .with(
+        headers: {
+          'Accept' => '*/*',
+          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+          'Api-Token' => 'CPLpXxWL8TvM7IXmBRVlRWFiHIbk0jDu',
+          'User-Agent' => 'Faraday v0.15.4'
+        }
+      )
+      .to_return(status: 200,
+                 body:
+    '{"inscripciones":[{"codigo":7507, "nombre":"Algo3", "docente":"Carlos Fontela"}]}')
+  end
+end
+
+RSpec.configure do |config|
+  config.before(:each) do
+    base_api_url = ENV['URL_API']
     stub_request(:get, base_api_url + 'materias?usernameAlumno=erroroferta')
       .with(
         headers: {
