@@ -44,7 +44,7 @@ end
 
 RSpec.configure do |config|
   config.before(:each) do
-    stub_request(:get, 'http://invernalia-guaraapi.herokuapp.com/promedio/all?usernameAlumno=ingresante')
+    stub_request(:get, 'http://invernalia-guaraapi.herokuapp.com/alumnos/promedio?usernameAlumno=ingresante')
       .with(headers: { 'Accept' => '*/*', 'User-Agent' => 'Ruby', 'API_KEY' => 'fake_key' })
       .to_return(status: 200,
                  body:

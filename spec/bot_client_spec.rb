@@ -93,7 +93,7 @@ Para listar los comandos disponibles por favor envia /help')
     end
 
     it '/promedio external requests for ingresante' do
-      uri = URI('http://invernalia-guaraapi.herokuapp.com/promedio/all?usernameAlumno=ingresante')
+      uri = URI('http://invernalia-guaraapi.herokuapp.com/alumnos/promedio?usernameAlumno=ingresante')
       req = Net::HTTP::Get.new(uri)
       req['API_KEY'] = 'fake_key'
       response = Net::HTTP.start(uri.hostname, uri.port) do |http|
