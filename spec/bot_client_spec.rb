@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'web_mock'
 require 'byebug'
-WebMock.disable_net_connect!(allow_localhost: true)
+WebMock.disable_net_connect!(allow_localhost: false)
 # Uncomment to use VCR
 # require 'vcr_helper'
 
@@ -150,6 +150,26 @@ Para listar los comandos disponibles por favor envia /help')
       end
       expect(response.body).to be_an_instance_of(String)
       expect(JSON.parse(response.body)['inscripciones'].length).to eq 0
+    end
+
+    it '/misInscripciones devuelve mensaje esperado cuando no hay inscripciones' do # rubocop:disable RSpec/ExampleLength
+      token = 'fake_token'
+      stub_get_updates_for(token, '/misInscripciones', 'ingresante')
+      base_api_url = ENV['URL_API']
+      stub_request(:get, base_api_url + 'inscripciones?usernameAlumno=ingresante')
+        .with(
+          headers: {
+            'Accept' => '*/*',
+            'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+            'Api-Token' => 'CPLpXxWL8TvM7IXmBRVlRWFiHIbk0jDu',
+            'User-Agent' => 'Faraday v0.15.4'
+          }
+        )
+        .to_return(status: 200, body: '{"inscripciones":[]}', headers: {})
+
+      stub_send_message(token, 'No tenes inscripciones')
+      app = BotClient.new(token)
+      app.run_once
     end
 
     it '/promedio external requests for ingresante' do
