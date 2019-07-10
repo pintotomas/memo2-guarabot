@@ -53,6 +53,16 @@ RSpec.configure do |config|
 end
 
 RSpec.configure do |config|
+  config.before(:each) do
+    stub_request(:get, 'http://invernalia-guaraapi.herokuapp.com/materias/estado?usernameAlumno=ingresante&codigoMateria=1009')
+      .with(headers: { 'Accept' => '*/*', 'User-Agent' => 'Ruby', 'API_KEY' => 'fake_key' })
+      .to_return(status: 200,
+                 body:
+               '{"nota_final":4}')
+  end
+end
+
+RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.
