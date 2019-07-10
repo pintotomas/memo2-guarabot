@@ -4,7 +4,6 @@ require 'byebug'
 WebMock.disable_net_connect!(allow_localhost: true)
 # Uncomment to use VCR
 # require 'vcr_helper'
-
 require File.dirname(__FILE__) + '/../app/bot_client'
 
 def stub_get_updates(token, message_text)
