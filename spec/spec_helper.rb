@@ -80,6 +80,23 @@ RSpec.configure do |config|
 end
 
 RSpec.configure do |config|
+  config.before(:each) do
+    stub_request(:get, 'http://api.telegram.org:443/bot87123879::AAF1823/sendMessage?chat_id=182381&text=/estado')
+      .with(headers: {
+              'Accept' => '*/*',
+              'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+              'Api-Key' => 'fake_key',
+              'Host' => 'api.telegram.org',
+              'User-Agent' => 'Ruby'
+            })
+      .to_return(status: 200, body: [{ 'chat_id' => '141733544',
+                                       'reply_markup' =>
+                                        '{"inline_keyboard":[[{"text":"Memo2","callback_data":"1"}],[{"text":"Algo1","callback_data":"2"}],[{"text":"Organizacion de Datos","callback_data":"3"}]]}',
+                                       'text' => 'Seleccione la materia para consultar tu estado' }], headers: {})
+  end
+end
+
+RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.
