@@ -41,6 +41,17 @@ RSpec.configure do |config|
                                        'text' => 'Seleccione la materia para la inscripcion' }], headers: {})
   end
 end
+
+RSpec.configure do |config|
+  config.before(:each) do
+    stub_request(:get, 'http://invernalia-guaraapi.herokuapp.com/promedio/all?usernameAlumno=ingresante')
+      .with(headers: { 'Accept' => '*/*', 'User-Agent' => 'Ruby', 'API_KEY' => 'fake_key' })
+      .to_return(status: 200,
+                 body:
+               '{"materias_aprobadas":2, "nota_promedio": 9}')
+  end
+end
+
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest

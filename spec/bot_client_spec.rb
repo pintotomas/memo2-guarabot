@@ -91,5 +91,17 @@ Para listar los comandos disponibles por favor envia /help')
       expect(response.body).to be_an_instance_of(String)
       expect(JSON.parse(response.body)['inscripciones'].length).to eq 0
     end
+
+    it '/promedio external requests for ingresante' do
+      uri = URI('http://invernalia-guaraapi.herokuapp.com/promedio/all?usernameAlumno=ingresante')
+      req = Net::HTTP::Get.new(uri)
+      req['API_KEY'] = 'fake_key'
+      response = Net::HTTP.start(uri.hostname, uri.port) do |http|
+        http.request(req)
+      end
+      expect(response.body).to be_an_instance_of(String)
+      expect(JSON.parse(response.body)['materias_aprobadas']).to eq 2
+      expect(JSON.parse(response.body)['nota_promedio']).to eq 9
+    end
   end
 end
