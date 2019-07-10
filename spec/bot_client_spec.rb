@@ -122,7 +122,7 @@ Para listar los comandos disponibles por favor envia /help')
     it '/oferta devuelve las materias con todos los campos' do # rubocop:disable RSpec/ExampleLength
       token = 'fake_token'
       stub_get_updates_for(token, '/oferta', 'ingresante')
-      stub_request(:get, 'http://localhost:3000/materias?usernameAlumno=ingresante')
+      stub_request(:get, 'http://invernalia-guaraapi.herokuapp.com/materias?usernameAlumno=ingresante')
         .with(
           headers: {
             'Accept' => '*/*',
