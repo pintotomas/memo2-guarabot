@@ -171,6 +171,26 @@ Para listar los comandos disponibles por favor envia /help')
       app.run_once
     end
 
+    it '/misInscripciones devuelve error' do # rubocop:disable RSpec/ExampleLength
+      token = 'fake_token'
+      stub_get_updates_for(token, '/misInscripciones', 'ingresante')
+      base_api_url = ENV['URL_API']
+      stub_request(:get, base_api_url + 'inscripciones?usernameAlumno=ingresante')
+        .with(
+          headers: {
+            'Accept' => '*/*',
+            'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+            'Api-Token' => 'CPLpXxWL8TvM7IXmBRVlRWFiHIbk0jDu',
+            'User-Agent' => 'Faraday v0.15.4'
+          }
+        )
+        .to_return(status: 200, body: '{"error":"lindo error"}', headers: {})
+
+      stub_send_message(token, 'lindo error')
+      app = BotClient.new(token)
+      app.run_once
+    end
+
     it '/promedio ingresante' do
       token = 'fake_token'
       stub_get_updates_for(token, '/promedio', 'ingresante')
