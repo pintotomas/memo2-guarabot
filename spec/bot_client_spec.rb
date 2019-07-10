@@ -69,6 +69,19 @@ Para listar los comandos disponibles por favor envia /help')
     expect(response.body[0]['text']).to eq 'Seleccione la materia para la inscripcion'
   end
 
+  it '/nota responds with inline keyboard' do
+    chat_id = 182_381
+    bot_token = '87123879::AAF1823'
+    uri = URI("https://api.telegram.org/bot#{bot_token}/sendMessage?chat_id=#{chat_id}&text=/nota")
+    req = Net::HTTP::Get.new(uri)
+    req['API_KEY'] = 'fake_key'
+    response = Net::HTTP.start(uri.hostname, uri.port) do |http|
+      http.request(req)
+    end
+    expect(JSON.parse(response.body[0]['reply_markup']).key?('inline_keyboard')).to eq true
+    expect(response.body[0]['text']).to eq 'Seleccione la materia para consultar tu nota'
+  end
+
   describe 'External requests' do
     it '/oferta external requests for ingresante' do
       uri = URI('http://invernalia-guaraapi.herokuapp.com/materias/all?usernameAlumno=ingresante')
