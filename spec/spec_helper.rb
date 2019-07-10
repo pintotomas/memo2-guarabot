@@ -31,7 +31,8 @@ end
 # "http://invernalia-guaraapi.herokuapp.com/materias/all?usernameAlumno=ingresante"
 RSpec.configure do |config|
   config.before(:each) do
-    stub_request(:get, 'http://invernalia-guaraapi.herokuapp.com/materias/all?usernameAlumno=ingresante')
+    base_api_url = ENV['URL_API']
+    stub_request(:get, base_api_url + 'materias/all?usernameAlumno=ingresante')
       .with(headers: { 'Accept' => '*/*', 'User-Agent' => 'Ruby', 'API_KEY' => 'fake_key' })
       .to_return(status: 200,
                  body:
@@ -52,6 +53,39 @@ RSpec.configure do |config|
                                        'reply_markup' =>
                                         '{"inline_keyboard":[[{"text":"Memo2","callback_data":"1"}],[{"text":"Algo1","callback_data":"2"}],[{"text":"Organizacion de Datos","callback_data":"3"}]]}',
                                        'text' => 'Seleccione la materia para la inscripcion' }], headers: {})
+  end
+end
+RSpec.configure do |config|
+  config.before(:each) do
+    stub_request(:post, 'https://api.telegram.org/botfake_token/sendMessage')
+      .with(
+        body: { 'chat_id' => '141733544', 'reply_markup' => '{"inline_keyboard":[[{"text":"Memo2","callback_data":"1001"}]]}', 'text' => 'Seleccione la materia para consultar tu nota' },
+        headers: {
+          'Accept' => '*/*',
+          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+          'Content-Type' => 'application/x-www-form-urlencoded',
+          'User-Agent' => 'Faraday v0.15.4'
+        }
+      )
+      .to_return(status: 200, body: '{"status": "ok"}', headers: {})
+  end
+end
+
+RSpec.configure do |config|
+  config.before(:each) do
+    base_api_url = ENV['URL_API']
+    stub_request(:get, base_api_url + 'materias/all?usernameAlumno=ingresante')
+      .with(
+        headers: {
+          'Accept' => '*/*',
+          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+          'Api-Token' => 'CPLpXxWL8TvM7IXmBRVlRWFiHIbk0jDu',
+          'User-Agent' => 'Faraday v0.15.4'
+        }
+      ).to_return(status: 200,
+                  body:
+                 '{"materias":[{"id":1001,"name":"Memo2","professor":"Linus Torvalds",
+                 "created_on":"2019-06-27","updated_on":null,"quota":2,"type":"tareas","requires_proyector":false,"requires_lab":false}]}')
   end
 end
 

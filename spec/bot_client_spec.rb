@@ -81,16 +81,11 @@ Para listar los comandos disponibles por favor envia /help')
   end
 
   it '/nota responds with inline keyboard' do
-    chat_id = 182_381
-    bot_token = '87123879::AAF1823'
-    uri = URI("https://api.telegram.org/bot#{bot_token}/sendMessage?chat_id=#{chat_id}&text=/nota")
-    req = Net::HTTP::Get.new(uri)
-    req['API_KEY'] = 'fake_key'
-    response = Net::HTTP.start(uri.hostname, uri.port) do |http|
-      http.request(req)
-    end
-    expect(JSON.parse(response.body[0]['reply_markup']).key?('inline_keyboard')).to eq true
-    expect(response.body[0]['text']).to eq 'Seleccione la materia para consultar tu nota'
+    token = 'fake_token'
+    stub_get_updates_for(token, '/nota', 'ingresante')
+    stub_send_message(token, 'Seleccione la materia para consultar tu nota')
+    app = BotClient.new(token)
+    app.run_once
   end
 
   it '/estado responds with inline keyboard' do
@@ -107,16 +102,16 @@ Para listar los comandos disponibles por favor envia /help')
   end
 
   describe 'External requests' do
-    it '/oferta external requests for ingresante' do
-      uri = URI('http://invernalia-guaraapi.herokuapp.com/materias/all?usernameAlumno=ingresante')
-      req = Net::HTTP::Get.new(uri)
-      req['API_KEY'] = 'fake_key'
-      response = Net::HTTP.start(uri.hostname, uri.port) do |http|
-        http.request(req)
-      end
-      expect(response.body).to be_an_instance_of(String)
-      expect(JSON.parse(response.body)['materias'].length).to eq 1
-    end
+    # it '/oferta external requests for ingresante' do
+    #  uri = URI('http://invernalia-guaraapi.herokuapp.com/materias/all?usernameAlumno=ingresante')
+    #  req = Net::HTTP::Get.new(uri)
+    #  req['API_KEY'] = 'fake_key'
+    #  response = Net::HTTP.start(uri.hostname, uri.port) do |http|
+    #    http.request(req)
+    #  end
+    #  expect(response.body).to be_an_instance_of(String)
+    #  expect(JSON.parse(response.body)['materias'].length).to eq 1
+    # end
 
     it '/oferta devuelve las materias con todos los campos' do # rubocop:disable RSpec/ExampleLength
       token = 'fake_token'
@@ -150,18 +145,6 @@ Para listar los comandos disponibles por favor envia /help')
       expect(response.body).to be_an_instance_of(String)
       expect(JSON.parse(response.body)['inscripciones'].length).to eq 0
     end
-
-    # it '/promedio external requests for ingresante' do
-    #  uri = URI('http://invernalia-guaraapi.herokuapp.com/alumnos/promedio?usernameAlumno=ingresante')
-    #  req = Net::HTTP::Get.new(uri)
-    #  req['API_KEY'] = 'fake_key'
-    #  response = Net::HTTP.start(uri.hostname, uri.port) do |http|
-    #    http.request(req)
-    #  end
-    #  expect(response.body).to be_an_instance_of(String)
-    #  expect(JSON.parse(response.body)['materias_aprobadas']).to eq 2
-    #  expect(JSON.parse(response.body)['nota_promedio']).to eq 9
-    # end
 
     it '/promedio ingresante' do
       token = 'fake_token'
