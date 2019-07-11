@@ -156,17 +156,6 @@ Para listar los comandos disponibles por favor envia /help')
       app.run_once
     end
 
-    it '/inscripciones external requests for ingresante' do
-      uri = URI('http://invernalia-guaraapi.herokuapp.com/inscripciones?usernameAlumno=pepito')
-      req = Net::HTTP::Get.new(uri)
-      req['API_KEY'] = 'fake_key'
-      response = Net::HTTP.start(uri.hostname, uri.port) do |http|
-        http.request(req)
-      end
-      expect(response.body).to be_an_instance_of(String)
-      expect(JSON.parse(response.body)['inscripciones'].length).to eq 0
-    end
-
     it '/misInscripciones devuelve mensaje esperado cuando no hay inscripciones' do
       token = 'fake_token'
       stub_get_updates_for(token, '/misInscripciones', 'ingresante')
