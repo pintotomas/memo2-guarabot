@@ -64,18 +64,7 @@ class RoutesInscription < Routes
   end
 
   on_response_to 'Seleccione la materia para la inscripcion' do |bot, message|
-    code_message = message.data
-    first_name = message.from.first_name.nil? ? '' : message.from.first_name
-    last_name = message.from.last_name.nil? ? '' : message.from.last_name
-    full_name = first_name + ' ' + last_name
-    params = { nombre_completo: full_name, codigo_materia: code_message.to_s, username_alumno: message.from.username }
-    response = Routes.send_post(params, 'alumnos')
-    request_body = JSON.parse(response.body.gsub('\"', '"'))
-    if request_body['error'].nil?
-      bot.api.send_message(chat_id: message.message.chat.id, text: request_body['resultado'])
-    else
-      bot.api.send_message(chat_id: message.message.chat.id, text: request_body['error'])
-    end
+    respond_to_subject_inscription(bot, message)
   end
 
   on_response_to 'Seleccione la materia para consultar tu nota' do |bot, message|
@@ -115,5 +104,20 @@ def respond_to_subject_status(bot, message)
     bot.api.send_message(chat_id: message.chat.id, text: request_body['error'])
   else
     bot.api.send_message(chat_id: message.message.chat.id, text: request_body['estado'])
+  end
+end
+
+def respond_to_subject_inscription(bot, message)
+  code_message = message.data
+  first_name = message.from.first_name.nil? ? '' : message.from.first_name
+  last_name = message.from.last_name.nil? ? '' : message.from.last_name
+  full_name = first_name + ' ' + last_name
+  params = { nombre_completo: full_name, codigo_materia: code_message.to_s, username_alumno: message.from.username }
+  response = Routes.send_post(params, 'alumnos')
+  request_body = JSON.parse(response.body.gsub('\"', '"'))
+  if request_body['error'].nil?
+    bot.api.send_message(chat_id: message.message.chat.id, text: request_body['resultado'])
+  else
+    bot.api.send_message(chat_id: message.message.chat.id, text: request_body['error'])
   end
 end

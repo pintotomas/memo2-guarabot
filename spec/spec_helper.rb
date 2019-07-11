@@ -330,6 +330,24 @@ end
 
 RSpec.configure do |config|
   config.before(:each) do
+    base_api_url = ENV['URL_API']
+    stub_request(:post, base_api_url + 'alumnos')
+      .with(
+        body: { '{"nombre_completo":"Tomas Pinto","codigo_materia":"sarasa","username_alumno":"tpinto"}' => nil },
+        headers: {
+          'Accept' => '*/*',
+          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+          'Api-Token' => 'CPLpXxWL8TvM7IXmBRVlRWFiHIbk0jDu',
+          'Content-Type' => 'application/x-www-form-urlencoded',
+          'User-Agent' => 'Faraday v0.15.4'
+        }
+      )
+      .to_return(status: 200, body: '{"status": "ok"}', headers: {})
+  end
+end
+
+RSpec.configure do |config|
+  config.before(:each) do
     stub_request(:post, 'https://api.telegram.org/botfake_token/sendMessage')
       .with(
         body: { 'chat_id' => '141733544', 'reply_markup' => '{"inline_keyboard":[[{"text":"Memo2","callback_data":"1001"}]]}', 'text' => 'Seleccione la materia para consultar tu nota' },
