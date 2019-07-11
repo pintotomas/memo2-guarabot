@@ -29,7 +29,7 @@ RSpec/MultipleExpectations:
 EndOfLine:
   Enabled: false
 RSpec/ExampleLength:
-  Max: 8
+  Max: 20
 Style/GlobalVars:
   Enabled: false
 Naming/UncommunicativeMethodParamName:
