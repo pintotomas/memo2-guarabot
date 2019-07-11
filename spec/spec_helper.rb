@@ -348,6 +348,28 @@ RSpec.configure do |config|
 end
 
 RSpec.configure do |config|
+  config.before(:each) do
+    base_api_url = ENV['URL_API']
+    stub_request(:get, base_api_url + 'inscripciones?usernameAlumno=ingresante')
+      .with(
+        headers: guaraapi_stub_request_header
+      )
+      .to_return(status: 200, body: '{"inscripciones":[]}', headers: {})
+  end
+end
+
+RSpec.configure do |config|
+  config.before(:each) do
+    base_api_url = ENV['URL_API']
+    stub_request(:get, base_api_url + 'inscripciones?usernameAlumno=ingresante')
+      .with(
+        headers: guaraapi_stub_request_header
+      )
+      .to_return(status: 200, body: '{"error":"lindo error"}', headers: {})
+  end
+end
+
+RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.

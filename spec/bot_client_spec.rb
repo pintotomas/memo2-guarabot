@@ -165,7 +165,7 @@ Para listar los comandos disponibles por favor envia /help')
           headers: {
             'Accept' => '*/*',
             'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-            'Api-Token' => 'CPLpXxWL8TvM7IXmBRVlRWFiHIbk0jDu',
+            'Api-Token' => ENV['HTTP_API_TOKEN'],
             'User-Agent' => 'Faraday v0.15.4'
           }
         )
@@ -185,7 +185,7 @@ Para listar los comandos disponibles por favor envia /help')
           headers: {
             'Accept' => '*/*',
             'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-            'Api-Token' => 'CPLpXxWL8TvM7IXmBRVlRWFiHIbk0jDu',
+            'Api-Token' => ENV['HTTP_API_TOKEN'],
             'User-Agent' => 'Faraday v0.15.4'
           }
         )
