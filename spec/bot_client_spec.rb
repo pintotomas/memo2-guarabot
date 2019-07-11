@@ -1,6 +1,5 @@
 require 'spec_helper'
 require 'web_mock'
-require 'byebug'
 WebMock.disable_net_connect!(allow_localhost: false)
 # Uncomment to use VCR
 # require 'vcr_helper'
