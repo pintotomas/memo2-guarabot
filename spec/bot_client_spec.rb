@@ -86,6 +86,14 @@ Para listar los comandos disponibles por favor envia /help')
     app.run_once
   end
 
+  it '/nota rdevuelve error' do
+    token = 'fake_token'
+    stub_get_updates_for(token, '/nota', 'notaconerror')
+    stub_send_message(token, 'error en la nota')
+    app = BotClient.new(token)
+    app.run_once
+  end
+
   it '/estado responds with inline keyboard' do
     token = 'fake_token'
     stub_get_updates_for(token, '/estado', 'ingresante')
