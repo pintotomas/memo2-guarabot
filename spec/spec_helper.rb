@@ -58,7 +58,8 @@ end
 
 RSpec.configure do |config|
   config.before(:each) do
-    stub_request(:get, 'http://localhost:3000/materias/estado?codigoMateria=sarasa&usernameAlumno=tpinto')
+    base_api_url = ENV['URL_API']
+    stub_request(:get, base_api_url + 'materias/estado?codigoMateria=sarasa&usernameAlumno=tpinto')
       .with(
         headers: {
           'Accept' => '*/*',
@@ -324,6 +325,24 @@ RSpec.configure do |config|
                  body:
     '{"materias"=>[{"id"=>7507, "name"=>"Algo3", "professor"=>"Carlos Fontela",
         "created_on"=>"2019-06-20", "updated_on"=>nil, "quota"=>50, "type"=>"parciales", "requires_proyector"=>false, "requires_lab"=>false}]}')
+  end
+end
+
+RSpec.configure do |config|
+  config.before(:each) do
+    base_api_url = ENV['URL_API']
+    stub_request(:post, base_api_url + 'alumnos')
+      .with(
+        body: { '{"nombre_completo":"Tomas Pinto","codigo_materia":"sarasa","username_alumno":"tpinto"}' => nil },
+        headers: {
+          'Accept' => '*/*',
+          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+          'Api-Token' => 'CPLpXxWL8TvM7IXmBRVlRWFiHIbk0jDu',
+          'Content-Type' => 'application/x-www-form-urlencoded',
+          'User-Agent' => 'Faraday v0.15.4'
+        }
+      )
+      .to_return(status: 200, body: '{"status": "ok"}', headers: {})
   end
 end
 
