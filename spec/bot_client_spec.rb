@@ -227,6 +227,25 @@ Para listar los comandos disponibles por favor envia /help')
       expect(response).to eq 'EN_CURSO'
     end
 
+    it 'test respuesta al seleccionar una materia para consultar nota' do
+      # SETUP
+      bot = instance_double('bot')
+      bot_api = instance_double('bot_apli')
+      message = instance_double('message')
+      user = instance_double('user')
+      chat = instance_double('chat')
+      allow(message).to receive(:data).and_return('sarasa')
+      allow(message).to receive(:from).and_return(user)
+      allow(message).to receive(:message).and_return(message)
+      allow(message).to receive(:chat).and_return(chat)
+      allow(chat).to receive(:id).and_return('25')
+      allow(user).to receive(:username).and_return('tpinto')
+      allow(bot_api).to receive(:send_message).with(chat_id: '25', text: 'Alumno no inscripto o no calificado').and_return('Alumno no inscripto o no calificado')
+      allow(bot).to receive(:api).and_return(bot_api)
+      response = respond_to_subject_status_nota(bot, message)
+      expect(response).to eq 'Alumno no inscripto o no calificado'
+    end
+
     it '/misInscripciones tiene inscripciones' do
       token = 'fake_token'
       stub_get_updates_for(token, '/misInscripciones', 'ingresanteConInscripciones')

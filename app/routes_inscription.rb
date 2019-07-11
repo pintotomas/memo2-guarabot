@@ -79,16 +79,7 @@ class RoutesInscription < Routes
   end
 
   on_response_to 'Seleccione la materia para consultar tu nota' do |bot, message|
-    code_message = message.data
-    params = { codigoMateria: code_message.to_s, usernameAlumno: message.from.username }
-    response = Routes.send_get(params, 'materias/estado')
-    request_body = JSON.parse(response.body.gsub('\"', '"'))
-    if !request_body['error'].nil?
-      bot.api.send_message(chat_id: message.chat.id, text: request_body['error'])
-    else
-      final_grade = request_body['nota_final'].nil? ? 'Alumno no inscripto o no calificado' : request_body['nota_final']
-      bot.api.send_message(chat_id: message.message.chat.id, text: final_grade)
-    end
+    respond_to_subject_status_nota(bot, message)
   end
 
   on_message '/misInscripciones' do |bot, message|
@@ -115,5 +106,18 @@ def respond_to_subject_status(bot, message)
     bot.api.send_message(chat_id: message.chat.id, text: request_body['error'])
   else
     bot.api.send_message(chat_id: message.message.chat.id, text: request_body['estado'])
+  end
+end
+
+def respond_to_subject_status_nota(bot, message)
+  code_message = message.data
+  params = { codigoMateria: code_message.to_s, usernameAlumno: message.from.username }
+  response = Routes.send_get(params, 'materias/estado')
+  request_body = JSON.parse(response.body.gsub('\"', '"'))
+  if !request_body['error'].nil?
+    bot.api.send_message(chat_id: message.chat.id, text: request_body['error'])
+  else
+    final_grade = request_body['nota_final'].nil? ? 'Alumno no inscripto o no calificado' : request_body['nota_final']
+    bot.api.send_message(chat_id: message.message.chat.id, text: final_grade)
   end
 end
