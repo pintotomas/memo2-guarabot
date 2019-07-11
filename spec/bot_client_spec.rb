@@ -87,16 +87,11 @@ Para listar los comandos disponibles por favor envia /help')
   end
 
   it '/estado responds with inline keyboard' do
-    chat_id = 182_381
-    bot_token = '87123879::AAF1823'
-    uri = URI("https://api.telegram.org/bot#{bot_token}/sendMessage?chat_id=#{chat_id}&text=/estado")
-    req = Net::HTTP::Get.new(uri)
-    req['API_KEY'] = 'fake_key'
-    response = Net::HTTP.start(uri.hostname, uri.port) do |http|
-      http.request(req)
-    end
-    expect(JSON.parse(response.body[0]['reply_markup']).key?('inline_keyboard')).to eq true
-    expect(response.body[0]['text']).to eq 'Seleccione la materia para consultar tu estado'
+    token = 'fake_token'
+    stub_get_updates_for(token, '/estado', 'ingresante')
+    stub_send_message(token, 'Seleccione la materia para consultar tu estado')
+    app = BotClient.new(token)
+    app.run_once
   end
 
   it '/estado devuelve error' do
