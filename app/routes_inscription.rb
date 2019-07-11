@@ -1,3 +1,4 @@
+require 'byebug'
 class RoutesInscription < Routes
   on_message '/oferta' do |bot, message|
     params = { usernameAlumno: message.from.username }
@@ -59,15 +60,7 @@ class RoutesInscription < Routes
   end
 
   on_response_to 'Seleccione la materia para consultar tu estado' do |bot, message|
-    code_message = message.data
-    params = { codigoMateria: code_message.to_s, usernameAlumno: message.from.username }
-    response = Routes.send_get(params, 'materias/estado')
-    request_body = JSON.parse(response.body.gsub('\"', '"'))
-    if !request_body['error'].nil?
-      bot.api.send_message(chat_id: message.chat.id, text: request_body['error'])
-    else
-      bot.api.send_message(chat_id: message.message.chat.id, text: request_body['estado'])
-    end
+    respond_to_subject_status(bot, message)
   end
 
   on_response_to 'Seleccione la materia para la inscripcion' do |bot, message|
@@ -110,5 +103,17 @@ class RoutesInscription < Routes
     else
       Routes.show_subjects_like_summary_info(bot, message, response_json, 'inscripciones')
     end
+  end
+end
+
+def respond_to_subject_status(bot, message)
+  code_message = message.data
+  params = { codigoMateria: code_message.to_s, usernameAlumno: message.from.username }
+  response = Routes.send_get(params, 'materias/estado')
+  request_body = JSON.parse(response.body.gsub('\"', '"'))
+  if !request_body['error'].nil?
+    bot.api.send_message(chat_id: message.chat.id, text: request_body['error'])
+  else
+    bot.api.send_message(chat_id: message.message.chat.id, text: request_body['estado'])
   end
 end

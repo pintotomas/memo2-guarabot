@@ -58,6 +58,21 @@ end
 
 RSpec.configure do |config|
   config.before(:each) do
+    stub_request(:get, 'http://localhost:3000/materias/estado?codigoMateria=sarasa&usernameAlumno=tpinto')
+      .with(
+        headers: {
+          'Accept' => '*/*',
+          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+          'Api-Token' => 'CPLpXxWL8TvM7IXmBRVlRWFiHIbk0jDu',
+          'User-Agent' => 'Faraday v0.15.4'
+        }
+      )
+      .to_return(status: 200, body: '{"status": "ok"}', headers: {})
+  end
+end
+
+RSpec.configure do |config|
+  config.before(:each) do
     stub_request(:post, 'https://api.telegram.org/botfake_token/sendMessage')
       .with(
         body: { 'chat_id' => '141733544', 'text' => '/oferta Muestra la oferta academica' },
