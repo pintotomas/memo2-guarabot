@@ -28,27 +28,33 @@ end
 # it.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
-# "http://invernalia-guaraapi.herokuapp.com/materias/all?usernameAlumno=ingresante"
+
+telegram_stub_request_header = {
+  'Accept' => '*/*',
+  'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+  'Content-Type' => 'application/x-www-form-urlencoded',
+  'User-Agent' => 'Faraday v0.15.4'
+}
+
+guaraapi_stub_request_header = {
+  'Accept' => '*/*',
+  'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+  'Api-Token' => ENV['HTTP_API_TOKEN'],
+  'User-Agent' => 'Faraday v0.15.4'
+}
+
 RSpec.configure do |config|
   config.before(:each) do
     base_api_url = ENV['URL_API']
     stub_request(:get, base_api_url + 'materias/all?usernameAlumno=ingresante')
-      .with(headers: { 'Accept' => '*/*', 'User-Agent' => 'Ruby', 'API_KEY' => 'fake_key' })
+      .with(headers: guaraapi_stub_request_header)
       .to_return(status: 200,
                  body:
                  '{"materias":[{"id":1001,"name":"Memo2","professor":"Linus Torvalds",
                  "created_on":"2019-06-27","updated_on":null,"quota":2,"type":"tareas","requires_proyector":false,"requires_lab":false}]}')
-    stub_request(:get, 'http://invernalia-guaraapi.herokuapp.com/inscripciones?usernameAlumno=pepito')
-      .with(headers: { 'Accept' => '*/*', 'User-Agent' => 'Ruby', 'API_KEY' => 'fake_key' })
-      .to_return(status: 200, body: '{"inscripciones":[]}')
+
     stub_request(:get, 'http://api.telegram.org:443/bot87123879::AAF1823/sendMessage?chat_id=182381&text=/inscripcion')
-      .with(headers: {
-              'Accept' => '*/*',
-              'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-              'Api-Key' => 'fake_key',
-              'Host' => 'api.telegram.org',
-              'User-Agent' => 'Ruby'
-            })
+      .with(headers: telegram_stub_request_header)
       .to_return(status: 200, body: [{ 'chat_id' => '141733544',
                                        'reply_markup' =>
                                         '{"inline_keyboard":[[{"text":"Memo2","callback_data":"1"}],[{"text":"Algo1","callback_data":"2"}],[{"text":"Organizacion de Datos","callback_data":"3"}]]}',
@@ -61,12 +67,7 @@ RSpec.configure do |config|
     base_api_url = ENV['URL_API']
     stub_request(:get, base_api_url + 'materias/estado?codigoMateria=sarasa&usernameAlumno=tpinto')
       .with(
-        headers: {
-          'Accept' => '*/*',
-          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-          'Api-Token' => 'CPLpXxWL8TvM7IXmBRVlRWFiHIbk0jDu',
-          'User-Agent' => 'Faraday v0.15.4'
-        }
+        headers: guaraapi_stub_request_header
       )
       .to_return(status: 200, body: '{"status": "ok"}', headers: {})
   end
@@ -77,12 +78,7 @@ RSpec.configure do |config|
     stub_request(:post, 'https://api.telegram.org/botfake_token/sendMessage')
       .with(
         body: { 'chat_id' => '141733544', 'text' => '/oferta Muestra la oferta academica' },
-        headers: {
-          'Accept' => '*/*',
-          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-          'Content-Type' => 'application/x-www-form-urlencoded',
-          'User-Agent' => 'Faraday v0.15.4'
-        }
+        headers: telegram_stub_request_header
       )
       .to_return(status: 200, body: '{"status": "ok"}', headers: {})
   end
@@ -93,12 +89,7 @@ RSpec.configure do |config|
     stub_request(:post, 'https://api.telegram.org/botfake_token/sendMessage')
       .with(
         body: { 'chat_id' => '141733544', 'text' => '/inscripcion Permite inscribirte a materias de la oferta academica' },
-        headers: {
-          'Accept' => '*/*',
-          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-          'Content-Type' => 'application/x-www-form-urlencoded',
-          'User-Agent' => 'Faraday v0.15.4'
-        }
+        headers: telegram_stub_request_header
       )
       .to_return(status: 200, body: '{"status": "ok"}', headers: {})
   end
@@ -109,12 +100,7 @@ RSpec.configure do |config|
     stub_request(:post, 'https://api.telegram.org/botfake_token/sendMessage')
       .with(
         body: { 'chat_id' => '141733544', 'text' => '/estado Permite consultar tu estado en una materia' },
-        headers: {
-          'Accept' => '*/*',
-          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-          'Content-Type' => 'application/x-www-form-urlencoded',
-          'User-Agent' => 'Faraday v0.15.4'
-        }
+        headers: telegram_stub_request_header
       )
       .to_return(status: 200, body: '{"status": "ok"}', headers: {})
   end
@@ -125,12 +111,7 @@ RSpec.configure do |config|
     stub_request(:post, 'https://api.telegram.org/botfake_token/sendMessage')
       .with(
         body: { 'chat_id' => '141733544', 'text' => '/nota Permite consultar tu nota en una materia' },
-        headers: {
-          'Accept' => '*/*',
-          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-          'Content-Type' => 'application/x-www-form-urlencoded',
-          'User-Agent' => 'Faraday v0.15.4'
-        }
+        headers: telegram_stub_request_header
       )
       .to_return(status: 200, body: '{"status": "ok"}', headers: {})
   end
@@ -141,12 +122,7 @@ RSpec.configure do |config|
     stub_request(:post, 'https://api.telegram.org/botfake_token/sendMessage')
       .with(
         body: { 'chat_id' => '141733544', 'text' => '/misInscripciones Muestra tus inscripciones' },
-        headers: {
-          'Accept' => '*/*',
-          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-          'Content-Type' => 'application/x-www-form-urlencoded',
-          'User-Agent' => 'Faraday v0.15.4'
-        }
+        headers: telegram_stub_request_header
       )
       .to_return(status: 200, body: '{"status": "ok"}', headers: {})
   end
@@ -157,12 +133,7 @@ RSpec.configure do |config|
     stub_request(:post, 'https://api.telegram.org/botfake_token/sendMessage')
       .with(
         body: { 'chat_id' => '141733544', 'text' => '/promedio Muestra tu cantidad de materias aprobadas y el promedio' },
-        headers: {
-          'Accept' => '*/*',
-          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-          'Content-Type' => 'application/x-www-form-urlencoded',
-          'User-Agent' => 'Faraday v0.15.4'
-        }
+        headers: telegram_stub_request_header
       )
       .to_return(status: 200, body: '{"status": "ok"}', headers: {})
   end
@@ -173,12 +144,7 @@ RSpec.configure do |config|
     base_api_url = ENV['URL_API']
     stub_request(:get, base_api_url + 'materias?usernameAlumno=ingresante')
       .with(
-        headers: {
-          'Accept' => '*/*',
-          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-          'Api-Token' => 'CPLpXxWL8TvM7IXmBRVlRWFiHIbk0jDu',
-          'User-Agent' => 'Faraday v0.15.4'
-        }
+        headers: guaraapi_stub_request_header
       )
       .to_return(status: 200,
                  body:
@@ -192,12 +158,7 @@ RSpec.configure do |config|
     base_api_url = ENV['URL_API']
     stub_request(:get, base_api_url + 'materias?usernameAlumno=falafel')
       .with(
-        headers: {
-          'Accept' => '*/*',
-          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-          'Api-Token' => 'CPLpXxWL8TvM7IXmBRVlRWFiHIbk0jDu',
-          'User-Agent' => 'Faraday v0.15.4'
-        }
+        headers: guaraapi_stub_request_header
       )
       .to_return(status: 200,
                  body:
@@ -210,12 +171,7 @@ RSpec.configure do |config|
     base_api_url = ENV['URL_API']
     stub_request(:get, base_api_url + 'inscripciones?usernameAlumno=ingresanteConInscripciones')
       .with(
-        headers: {
-          'Accept' => '*/*',
-          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-          'Api-Token' => 'CPLpXxWL8TvM7IXmBRVlRWFiHIbk0jDu',
-          'User-Agent' => 'Faraday v0.15.4'
-        }
+        headers: guaraapi_stub_request_header
       )
       .to_return(status: 200,
                  body:
@@ -228,12 +184,7 @@ RSpec.configure do |config|
     base_api_url = ENV['URL_API']
     stub_request(:get, base_api_url + 'materias/all?usernameAlumno=roberto')
       .with(
-        headers: {
-          'Accept' => '*/*',
-          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-          'Api-Token' => 'CPLpXxWL8TvM7IXmBRVlRWFiHIbk0jDu',
-          'User-Agent' => 'Faraday v0.15.4'
-        }
+        headers: guaraapi_stub_request_header
       )
       .to_return(status: 200, body: '{"error":"error en el estado"}')
   end
@@ -244,12 +195,7 @@ RSpec.configure do |config|
     base_api_url = ENV['URL_API']
     stub_request(:get, base_api_url + 'materias/all?usernameAlumno=notaconerror')
       .with(
-        headers: {
-          'Accept' => '*/*',
-          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-          'Api-Token' => 'CPLpXxWL8TvM7IXmBRVlRWFiHIbk0jDu',
-          'User-Agent' => 'Faraday v0.15.4'
-        }
+        headers: guaraapi_stub_request_header
       )
       .to_return(status: 200, body: '{"error":"error en la nota"}')
   end
@@ -260,12 +206,7 @@ RSpec.configure do |config|
     base_api_url = ENV['URL_API']
     stub_request(:get, base_api_url + 'materias?usernameAlumno=erroroferta')
       .with(
-        headers: {
-          'Accept' => '*/*',
-          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-          'Api-Token' => 'CPLpXxWL8TvM7IXmBRVlRWFiHIbk0jDu',
-          'User-Agent' => 'Faraday v0.15.4'
-        }
+        headers: guaraapi_stub_request_header
       )
       .to_return(status: 200,
                  body:
@@ -278,12 +219,7 @@ RSpec.configure do |config|
     base_api_url = ENV['URL_API']
     stub_request(:get, base_api_url + 'materias?usernameAlumno=errorinscripcion')
       .with(
-        headers: {
-          'Accept' => '*/*',
-          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-          'Api-Token' => 'CPLpXxWL8TvM7IXmBRVlRWFiHIbk0jDu',
-          'User-Agent' => 'Faraday v0.15.4'
-        }
+        headers: guaraapi_stub_request_header
       )
       .to_return(status: 200,
                  body:
@@ -296,12 +232,7 @@ RSpec.configure do |config|
     base_api_url = ENV['URL_API']
     stub_request(:get, base_api_url + 'materias/all?usernameAlumno=errorinscripcion')
       .with(
-        headers: {
-          'Accept' => '*/*',
-          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-          'Api-Token' => 'CPLpXxWL8TvM7IXmBRVlRWFiHIbk0jDu',
-          'User-Agent' => 'Faraday v0.15.4'
-        }
+        headers: guaraapi_stub_request_header
       )
       .to_return(status: 200,
                  body:
@@ -314,12 +245,7 @@ RSpec.configure do |config|
     base_api_url = ENV['URL_API']
     stub_request(:get, base_api_url + 'materias/all?usernameAlumno=ingresante')
       .with(
-        headers: {
-          'Accept' => '*/*',
-          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-          'Api-Token' => 'CPLpXxWL8TvM7IXmBRVlRWFiHIbk0jDu',
-          'User-Agent' => 'Faraday v0.15.4'
-        }
+        headers: guaraapi_stub_request_header
       )
       .to_return(status: 200,
                  body:
@@ -334,13 +260,7 @@ RSpec.configure do |config|
     stub_request(:post, base_api_url + 'alumnos')
       .with(
         body: { '{"nombre_completo":"Tomas Pinto","codigo_materia":"sarasa","username_alumno":"tpinto"}' => nil },
-        headers: {
-          'Accept' => '*/*',
-          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-          'Api-Token' => 'CPLpXxWL8TvM7IXmBRVlRWFiHIbk0jDu',
-          'Content-Type' => 'application/x-www-form-urlencoded',
-          'User-Agent' => 'Faraday v0.15.4'
-        }
+        headers: guaraapi_stub_request_header
       )
       .to_return(status: 200, body: '{"status": "ok"}', headers: {})
   end
@@ -351,12 +271,7 @@ RSpec.configure do |config|
     stub_request(:post, 'https://api.telegram.org/botfake_token/sendMessage')
       .with(
         body: { 'chat_id' => '141733544', 'reply_markup' => '{"inline_keyboard":[[{"text":"Memo2","callback_data":"1001"}]]}', 'text' => 'Seleccione la materia para consultar tu nota' },
-        headers: {
-          'Accept' => '*/*',
-          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-          'Content-Type' => 'application/x-www-form-urlencoded',
-          'User-Agent' => 'Faraday v0.15.4'
-        }
+        headers: telegram_stub_request_header
       )
       .to_return(status: 200, body: '{"status": "ok"}', headers: {})
   end
@@ -367,12 +282,7 @@ RSpec.configure do |config|
     stub_request(:post, 'https://api.telegram.org/botfake_token/sendMessage')
       .with(
         body: { 'chat_id' => '141733544', 'reply_markup' => '{"inline_keyboard":[[{"text":"Memo2","callback_data":"1001"}]]}', 'text' => 'Seleccione la materia para consultar tu estado' },
-        headers: {
-          'Accept' => '*/*',
-          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-          'Content-Type' => 'application/x-www-form-urlencoded',
-          'User-Agent' => 'Faraday v0.15.4'
-        }
+        headers: telegram_stub_request_header
       )
       .to_return(status: 200, body: '{"status": "ok"}', headers: {})
   end
@@ -383,12 +293,7 @@ RSpec.configure do |config|
     stub_request(:post, 'https://api.telegram.org/botfake_token/sendMessage')
       .with(
         body: { 'chat_id' => '141733544', 'reply_markup' => '{"inline_keyboard":[[{"text":"Memo2","callback_data":"1001"}]]}', 'text' => 'Seleccione la materia para la inscripcion' },
-        headers: {
-          'Accept' => '*/*',
-          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-          'Content-Type' => 'application/x-www-form-urlencoded',
-          'User-Agent' => 'Faraday v0.15.4'
-        }
+        headers: telegram_stub_request_header
       )
       .to_return(status: 200, body: '{"status": "ok"}', headers: {})
   end
@@ -399,12 +304,7 @@ RSpec.configure do |config|
     base_api_url = ENV['URL_API']
     stub_request(:get, base_api_url + 'materias/all?usernameAlumno=ingresante')
       .with(
-        headers: {
-          'Accept' => '*/*',
-          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-          'Api-Token' => 'CPLpXxWL8TvM7IXmBRVlRWFiHIbk0jDu',
-          'User-Agent' => 'Faraday v0.15.4'
-        }
+        headers: guaraapi_stub_request_header
       ).to_return(status: 200,
                   body:
                  '{"materias":[{"id":1001,"name":"Memo2","professor":"Linus Torvalds",
@@ -417,12 +317,7 @@ RSpec.configure do |config|
     base_api_url = ENV['URL_API']
     stub_request(:get, base_api_url + 'alumnos/promedio?usernameAlumno=ingresante')
       .with(
-        headers: {
-          'Accept' => '*/*',
-          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-          'Api-Token' => 'CPLpXxWL8TvM7IXmBRVlRWFiHIbk0jDu',
-          'User-Agent' => 'Faraday v0.15.4'
-        }
+        headers: guaraapi_stub_request_header
       )
       .to_return(status: 200,
                  body:
@@ -432,24 +327,8 @@ end
 
 RSpec.configure do |config|
   config.before(:each) do
-    stub_request(:get, 'http://invernalia-guaraapi.herokuapp.com/materias/estado?usernameAlumno=ingresante&codigoMateria=1009')
-      .with(headers: { 'Accept' => '*/*', 'User-Agent' => 'Ruby', 'API_KEY' => 'fake_key' })
-      .to_return(status: 200,
-                 body:
-               '{"nota_final":4}')
-  end
-end
-
-RSpec.configure do |config|
-  config.before(:each) do
     stub_request(:get, 'http://api.telegram.org:443/bot87123879::AAF1823/sendMessage?chat_id=182381&text=/nota')
-      .with(headers: {
-              'Accept' => '*/*',
-              'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-              'Api-Key' => 'fake_key',
-              'Host' => 'api.telegram.org',
-              'User-Agent' => 'Ruby'
-            })
+      .with(headers: telegram_stub_request_header)
       .to_return(status: 200, body: [{ 'chat_id' => '141733544',
                                        'reply_markup' =>
                                         '{"inline_keyboard":[[{"text":"Memo2","callback_data":"1"}],[{"text":"Algo1","callback_data":"2"}],[{"text":"Organizacion de Datos","callback_data":"3"}]]}',
@@ -460,17 +339,33 @@ end
 RSpec.configure do |config|
   config.before(:each) do
     stub_request(:get, 'http://api.telegram.org:443/bot87123879::AAF1823/sendMessage?chat_id=182381&text=/estado')
-      .with(headers: {
-              'Accept' => '*/*',
-              'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-              'Api-Key' => 'fake_key',
-              'Host' => 'api.telegram.org',
-              'User-Agent' => 'Ruby'
-            })
+      .with(headers: telegram_stub_request_header)
       .to_return(status: 200, body: [{ 'chat_id' => '141733544',
                                        'reply_markup' =>
                                         '{"inline_keyboard":[[{"text":"Memo2","callback_data":"1"}],[{"text":"Algo1","callback_data":"2"}],[{"text":"Organizacion de Datos","callback_data":"3"}]]}',
                                        'text' => 'Seleccione la materia para consultar tu estado' }], headers: {})
+  end
+end
+
+RSpec.configure do |config|
+  config.before(:each) do
+    base_api_url = ENV['URL_API']
+    stub_request(:get, base_api_url + 'inscripciones?usernameAlumno=ingresante')
+      .with(
+        headers: guaraapi_stub_request_header
+      )
+      .to_return(status: 200, body: '{"inscripciones":[]}', headers: {})
+  end
+end
+
+RSpec.configure do |config|
+  config.before(:each) do
+    base_api_url = ENV['URL_API']
+    stub_request(:get, base_api_url + 'inscripciones?usernameAlumno=ingresante')
+      .with(
+        headers: guaraapi_stub_request_header
+      )
+      .to_return(status: 200, body: '{"error":"lindo error"}', headers: {})
   end
 end
 
