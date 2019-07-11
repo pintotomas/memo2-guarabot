@@ -131,6 +131,15 @@ Para listar los comandos disponibles por favor envia /help')
       app.run_once
     end
 
+    it '/inscripcion devuelve error' do
+      token = 'fake_token'
+      stub_get_updates_for(token, '/inscripcion', 'errorinscripcion')
+
+      stub_send_message(token, 'error en la inscripcion')
+      app = BotClient.new(token)
+      app.run_once
+    end
+
     it '/inscripcion de materia' do
       token = 'fake_token'
       stub_get_updates_for(token, '/inscripcion', 'ingresante')
