@@ -261,11 +261,20 @@ end
 
 RSpec.configure do |config|
   config.before(:each) do
-  end
-end
-
-RSpec.configure do |config|
-  config.before(:each) do
+    base_api_url = ENV['URL_API']
+    stub_request(:get, base_api_url + 'materias/all?usernameAlumno=ingresante')
+      .with(
+        headers: {
+          'Accept' => '*/*',
+          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+          'Api-Token' => 'CPLpXxWL8TvM7IXmBRVlRWFiHIbk0jDu',
+          'User-Agent' => 'Faraday v0.15.4'
+        }
+      )
+      .to_return(status: 200,
+                 body:
+    '{"materias"=>[{"id"=>7507, "name"=>"Algo3", "professor"=>"Carlos Fontela",
+        "created_on"=>"2019-06-20", "updated_on"=>nil, "quota"=>50, "type"=>"parciales", "requires_proyector"=>false, "requires_lab"=>false}]}')
   end
 end
 
@@ -274,6 +283,22 @@ RSpec.configure do |config|
     stub_request(:post, 'https://api.telegram.org/botfake_token/sendMessage')
       .with(
         body: { 'chat_id' => '141733544', 'reply_markup' => '{"inline_keyboard":[[{"text":"Memo2","callback_data":"1001"}]]}', 'text' => 'Seleccione la materia para consultar tu nota' },
+        headers: {
+          'Accept' => '*/*',
+          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+          'Content-Type' => 'application/x-www-form-urlencoded',
+          'User-Agent' => 'Faraday v0.15.4'
+        }
+      )
+      .to_return(status: 200, body: '{"status": "ok"}', headers: {})
+  end
+end
+
+RSpec.configure do |config|
+  config.before(:each) do
+    stub_request(:post, 'https://api.telegram.org/botfake_token/sendMessage')
+      .with(
+        body: { 'chat_id' => '141733544', 'reply_markup' => '{"inline_keyboard":[[{"text":"Memo2","callback_data":"1001"}]]}', 'text' => 'Seleccione la materia para la inscripcion' },
         headers: {
           'Accept' => '*/*',
           'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',

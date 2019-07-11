@@ -78,19 +78,6 @@ Para listar los comandos disponibles por favor envia /help')
     app.run_once
   end
 
-  it '/inscripciones responds with inline keyboard' do
-    chat_id = 182_381
-    bot_token = '87123879::AAF1823'
-    uri = URI("https://api.telegram.org/bot#{bot_token}/sendMessage?chat_id=#{chat_id}&text=/inscripcion")
-    req = Net::HTTP::Get.new(uri)
-    req['API_KEY'] = 'fake_key'
-    response = Net::HTTP.start(uri.hostname, uri.port) do |http|
-      http.request(req)
-    end
-    expect(JSON.parse(response.body[0]['reply_markup']).key?('inline_keyboard')).to eq true
-    expect(response.body[0]['text']).to eq 'Seleccione la materia para la inscripcion'
-  end
-
   it '/nota responds with inline keyboard' do
     token = 'fake_token'
     stub_get_updates_for(token, '/nota', 'ingresante')
@@ -149,11 +136,11 @@ Para listar los comandos disponibles por favor envia /help')
       app.run_once
     end
 
-    it '/inscripcion devuelve error' do
+    it '/inscripcion de materia' do
       token = 'fake_token'
-      stub_get_updates_for(token, '/inscripcion', 'errorinscripcion')
+      stub_get_updates_for(token, '/inscripcion', 'ingresante')
 
-      stub_send_message(token, 'error en la inscripcion')
+      stub_send_message(token, 'Seleccione la materia para la inscripcion')
       app = BotClient.new(token)
       app.run_once
     end
