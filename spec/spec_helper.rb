@@ -58,7 +58,8 @@ end
 
 RSpec.configure do |config|
   config.before(:each) do
-    stub_request(:get, 'http://localhost:3000/materias/estado?codigoMateria=sarasa&usernameAlumno=tpinto')
+    base_api_url = ENV['URL_API']
+    stub_request(:get, base_api_url + 'materias/estado?codigoMateria=sarasa&usernameAlumno=tpinto')
       .with(
         headers: {
           'Accept' => '*/*',
